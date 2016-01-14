@@ -13,13 +13,13 @@ if(!window.Float32Array){
 
 var w = 800, // px
     h = 800, //px
-    nparts = 10010, //num particles
+    nparts = 100, //num particles
     s = 18;  //cell size
     c = document.getElementById('canv'),
     c.width = w,
     c.height = h,
   
-    srat = 1.0; //sreen ratio
+    srat = 1.0; //screen ratio
 
 
 var $= c.getContext('2d'),
