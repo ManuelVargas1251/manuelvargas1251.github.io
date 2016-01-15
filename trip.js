@@ -13,7 +13,7 @@ if(!window.Float32Array){
 
 var w = 800, // px
     h = 800, //px
-    nparts = 100, //num particles
+    nparts = 1000, //num particles
     s = 18;  //cell size
     c = document.getElementById('canv'),
     c.width = w,
