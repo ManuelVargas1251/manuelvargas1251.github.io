@@ -5,7 +5,7 @@
 
 body {
   padding:50px;
-  font:20px/1.5 /*"Noto Sans",*/ Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font:18px/1.5 /*"Noto Sans",*/ Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color:#777;
   font-weight:500;
 }
@@ -35,8 +35,9 @@ h3, h4, h5, h6 {
   color:#494949;
 }
 
+/*link color. changed to red*/
 a {
-  color:#39c;
+  color:#cc334d;
   font-weight:400;
   text-decoration:none;
 }
