@@ -2,7 +2,11 @@ var d = new Date();
 var n = d.getDay();
   
 if (n == 0) {
-  document.linkColor = "#cc334d";
+  //document.linkColor = "#cc334d";
+  var elements = document.querySelectorAll('a');  //find all elements with 'a'
+  [].slice.call(elements).forEach(function(elem){ //for loop of sorts
+    elem.style.color = '#cc334d'; //changes color
+  });
     }
 if (n == 1) {
   //document.linkColor = "#ad33cc";
