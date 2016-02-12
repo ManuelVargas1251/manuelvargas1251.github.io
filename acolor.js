@@ -42,7 +42,7 @@ if  (n == 5) {
   //document.linkColor = "#c7cc33";
   var elements = document.querySelectorAll('a');
   [].slice.call(elements).forEach(function(elem){
-    elem.style.color = '#c7cc33';
+    elem.style.color = '#e6e600';
   });
   }
 if (n == 6) {
