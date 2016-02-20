@@ -1,0 +1,42 @@
+<html>
+	<style>
+		html {
+			background-color: #1c1c1c;
+			background-image: url("http://excitegym.com/wp-content/uploads/2015/03/nca2015_1crp.jpg");
+			text-align: center;
+			color: white;
+			font-family: Arial;
+			font-size: 30px;
+			font-weight: 500;
+		}
+
+		header {
+			padding: 0px 0px 55px 0px
+		}
+
+		button {
+			width: 220px;
+			height: 58px;
+			padding: 5px;
+
+			color: white;
+			font-size: 25px;
+			
+			moz-border-radius: 0px;
+			-webkit-border-radius: 10px;
+			border: 0px ;
+			
+		}
+	</style>
+
+	<header>
+		<img src="http://excitegym.com/wp-content/uploads/2016/02/ExciteLogo.png" height="40%" style="padding-top: 50px;">
+		<p>
+		Cheer   &nbsp;&nbsp;    Gymnastics   &nbsp;&nbsp;    Tumble<p>
+	</header>
+	
+	<button style="background-color:#5d9430">Parent Portal</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button style="background-color:#df0024">Free Trial Class</button>
+	
+</html>
