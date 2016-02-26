@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<style>
+	@import url(https://fonts.googleapis.com/css?family=Lato:,500,700);
+
+clock{
+  color: white;
+  text-align: center;
+  padding: 20px 2px;
+  font: 180px/1.5  Lato, sans-serif;
+}
+
+/* Photo by: https://unsplash.com/aleskrivec */
+body {
+   background-image: url(https://images.unsplash.com/photo-1415938631621-bc6316bd55f1?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&s=c1384a4f5861dfa99586fbac02bd742e);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color:#000f11;
+}
+</style>
+
+<script>
+	function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var ampm;
+    m = checkTime(m);
+    ampm= get_ampm(h)
+    h = twelvehour(h);
+    
+    document.getElementById('txt').innerHTML = h + ":" + m + " " + ampm;
+    var t = setTimeout(startTime, 250);
+}
+function checkTime(i) {
+    if (i < 10) {
+        i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+function twelvehour(h) {
+   if (h>12){
+        h = h-"12"};
+   if (h==0){
+        h="12"};
+   return h;
+}
+
+function get_ampm(h){
+   if (h<12){
+       ampm = "AM"};
+   if (h>12){
+       ampm = "PM"};
+       return ampm;
+}
+</script>
+
+<body onload="startTime()">
+  <clock>
+    <div id="txt"></div>
+    <div style="font-size: 18px; ">Created By Manuel Vargas</div>
+  </clock>
+</body>
+
