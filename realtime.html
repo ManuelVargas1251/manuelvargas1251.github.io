@@ -6,11 +6,13 @@ function startTime() {
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
+    var ampm;
     m = checkTime(m);
+    ampm= get_ampm(h)
     h = twelvehour(h);
-
+    
     document.getElementById('txt').innerHTML =
-    h + ":" + m;
+    h + ":" + m + " " + ampm;
     var t = setTimeout(startTime, 250);
 }
 function checkTime(i) {
@@ -24,12 +26,21 @@ function twelvehour(h) {
         h = h-"12"};
    return h;
 }
+
+function get_ampm(h){
+   if (h<12){
+       ampm = "AM"};
+   if (h>12){
+       ampm = "PM"};
+       return ampm;
+}
 </script>
-</head>
+
 
 <body onload="startTime()">
 
 <div id="txt"></div>
 
 </body>
+</head>
 </html>

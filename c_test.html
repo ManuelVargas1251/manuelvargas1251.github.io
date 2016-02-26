@@ -1,46 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<script>
-function startTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var ampm;
-    m = checkTime(m);
-    ampm= get_ampm(h)
-    h = twelvehour(h);
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="theme-color" content="#000f11">
+    <title>Manuel Vargas</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  
+  <style>
+    body{
+      background-color:#000f11;
+    }
+  </style>
+  
+<body>
+    <h1><a>404</a></h1>
+    Page not found<br>
+    Sorry.
     
-    document.getElementById('txt').innerHTML =
-    h + ":" + m + " " + ampm;
-    var t = setTimeout(startTime, 250);
-}
-function checkTime(i) {
-    if (i < 10) {
-        i = "0" + i};  // add zero in front of numbers < 10
-    return i;
-}
-
-function twelvehour(h) {
-   if (h>12){
-        h = h-"12"};
-   return h;
-}
-
-function get_ampm(h){
-   if (h<12){
-       ampm = "AM"};
-   if (h>12){
-       ampm = "PM"};
-       return ampm;
-}
-</script>
-
-
-<body onload="startTime()">
-
-<div id="txt"></div>
-
+    <script src="javascripts/scale.fix.js"></script>
+    <script src="acolor.js"></script>
+    
 </body>
-</head>
-</html>
