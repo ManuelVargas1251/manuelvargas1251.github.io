@@ -23,6 +23,7 @@ body {
   
   clock {
     font: 130px  Lato, sans-serif;
+	top: 20vw;
   }
   
   body {
