@@ -19,7 +19,7 @@ function startTime() {
 	h = twelvehour(h);
     
     document.getElementById('txt').innerHTML = h + ":" + m + " " + ampm;
-    var t = setTimeout(startTime, 250);
+    var t = setTimeout(startTime, 2000); //every 2 seconds
 	}
 	
 	function checkTime(i) {
