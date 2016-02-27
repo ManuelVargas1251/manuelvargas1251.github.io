@@ -15,7 +15,7 @@ function startTime() {
 	var m = today.getMinutes();
 	var ampm;
 	m = checkTime(m);
-	ampm = get_ampm(h)
+	ampm = get_ampm(h);
 	h = twelvehour(h);
     
     document.getElementById('txt').innerHTML = h + ":" + m + " " + ampm;
