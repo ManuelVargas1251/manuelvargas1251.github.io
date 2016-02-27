@@ -1,72 +1,49 @@
 <!DOCTYPE html>
 <html>
-<style>
-@import url(https://fonts.googleapis.com/css?family=Lato:,500,700);
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="theme-color" content="#1c1c1c">
 
-clock {
-  color: white;
-  text-align: center;
-  font: 180px Lato, sans-serif;
-}
-
-
-/* Photo by: https://unsplash.com/aleskrivec */
-body {
-  background-image: url(fog.jpg);
-  background-position: center 0;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-color:#000f11;
-}
-
-@media only screen and (max-width: 767px) {
-  
-  clock {
-    font: 130px  Lato, sans-serif;
-  }
-  
-  body {
-    background-image: url(fog_m.jpg);
-  }
-}
-
-</style>
+    <link rel="stylesheet" href="time.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
 <script>
-	function startTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var ampm;
-    m = checkTime(m);
-    ampm= get_ampm(h)
-    h = twelvehour(h);
+
+function startTime() {
+	var today = new Date();
+	var h = today.getHours();
+	var m = today.getMinutes();
+	var ampm;
+	m = checkTime(m);
+	ampm= get_ampm(h)
+	h = twelvehour(h);
     
     document.getElementById('txt').innerHTML = h + ":" + m + " " + ampm;
     var t = setTimeout(startTime, 250);
-}
-function checkTime(i) {
-    if (i < 10) {
-        i = "0" + i};  // add zero in front of numbers < 10
-    return i;
-}
+	}
+	
+	function checkTime(i) {
+		if (i < 10) {
+			i = "0" + i};  // add zero in front of numbers < 10
+		return i;
+	}
 
-function twelvehour(h) {
-   if (h>12){
-        h = h-"12"};
-   if (h==0){
-        h="12"};
-   return h;
-}
+	function twelvehour(h) {
+	   if (h>12){
+			h = h-"12"};
+	   if (h==0){
+			h="12"};
+	   return h;
+	}
 
-function get_ampm(h){
-   if (h<12){
-       ampm = "AM"};
-   if (h>12){
-       ampm = "PM"};
-       return ampm;
-}
+	function get_ampm(h){
+	   if (h<12){
+		   ampm = "AM"};
+	   if (h>12){
+		   ampm = "PM"};
+		   return ampm;
+	}
+	
 </script>
 
 <body onload="startTime()">

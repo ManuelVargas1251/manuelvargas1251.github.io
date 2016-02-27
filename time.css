@@ -1,0 +1,29 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:,500,700);
+
+clock {
+  color: white;
+  text-align: center;
+  font: 180px Lato, sans-serif;
+}
+
+
+/* Photo by: https://unsplash.com/aleskrivec */
+body {
+  background-image: url(fog.jpg);
+  background-position: center 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color:#000f11;
+}
+
+@media only screen and (max-width: 767px) {
+  
+  clock {
+    font: 130px  Lato, sans-serif;
+  }
+  
+  body {
+    background-image: url(fog_m.jpg);
+  }
+}
