@@ -4,6 +4,8 @@ clock {
   color: white;
   text-align: center;
   font: 180px Lato, sans-serif;
+  position: relative;
+  top: 10vw;
 }
 
 
