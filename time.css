@@ -11,7 +11,7 @@ clock {
 
 /* Photo by: https://unsplash.com/aleskrivec */
 body {
-  background-image: url(fog.jpg);
+  background-image: url(paris_c.jpg);
   background-position: center 0;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -27,6 +27,6 @@ body {
   }
   
   body {
-    background-image: url(fog_m.jpg);
+    background-image: url(paris_m_c.jpg);
   }
 }
