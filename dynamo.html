@@ -8,6 +8,10 @@ function vidFade() {
   vid.classList.add("stopfade");
 }
 
+vid.addEventListener('click',function(){
+  vid.play();
+},false);
+
 vid.addEventListener('ended', function(){
   // only functional if "loop" is removed 
   vid.pause();
