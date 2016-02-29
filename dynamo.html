@@ -1,38 +1,37 @@
 
 <meta name="theme-color" content="#000">
 
-<script>
-var vid = document.getElementById("bgvid");
-
-function vidFade() {
-  vid.classList.add("stopfade");
-}
-
-vid.addEventListener('click',function(){
-  vid.play();
-},false);
-
-vid.addEventListener('ended', function(){
-  // only functional if "loop" is removed 
-  vid.pause();
-  // to capture IE10
-  vidFade();
-}); 
-</script>
-
 <style>
 @import url(https://fonts.googleapis.com/css?family=Lato:400,500,700);
+
+a {
+  text-decoration:none;
+  color: white;
+}
 
 body {
   background: #000;
   color: white;
   text-align: right;
   vertical-align: middle;
-  font: 50px  Lato, sans-serif;
+  font: 22px  Lato, sans-serif;
   position: relative;
   padding: 20px;
   /*top: 5vw;*/
   z-index: 4;
+  
+  height: auto;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 20;
+  left: 0;
+  padding: 10rem;
+  font-size: 50px;
+  text-align: center;
 }
 
 video { 
@@ -48,6 +47,7 @@ video {
     background: url('') no-repeat;
     background-size: cover;
     transition: 1s opacity;
+  
     -webkit-filter: blur(10px);
     filter: blur(10px);
     filter: brightness(40%)
@@ -56,24 +56,19 @@ video {
 @media screen and (max-width: 500px) { 
   div{width:70%;} 
 }
-@media screen and (max-device-width: 800px){
-
-	html {
-		background: url() #000 no-repeat center center fixed;
-		}
-	<!--	
-	#bgvid {
-		display: none;
-		}
-	-->
+@media screen and (max-device-width: 800px) {
+  html { background: url() #000 no-repeat center center fixed; }
+  #bgvid { display: none; }
 }
-
-
 </style>
 
 <body>
-Filmed by<br>Alexandria Henry<br> 2013
+Filmed by<br>Alexandria Henry<br>Paris 2013
 </body>
+
+<div class="footer">
+<a href="http://manuelvargas.me" target="_blank" >manuelvargas.me</a>
+</div>
 
 <video autoplay  poster="" id="bgvid" loop muted>
 <source src = "https://raw.githubusercontent.com/ManuelVargas1251/manuelvargas1251.github.io/master/dynamo_manuel.webm" type= "video/webm">
