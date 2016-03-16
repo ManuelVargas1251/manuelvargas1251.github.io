@@ -40,7 +40,7 @@ video {
     filter: brightness(40%)
 }
 
-.footer {
+.title {
   position: absolute;
   right: 0;
   bottom: 45vh;
@@ -53,13 +53,28 @@ video {
 .fa {
 	padding: 12px;
 }
+
+@media print, screen and (max-width: 767px) {
+
+	body {
+		visibility: hidden;
+	}
+
+	.title {
+		font-size: 60px;
+	}
+
+
+}
+
+
 </style>
 
 <body>
 Filmed by<br>Alexandria Henry<br>Paris 2013
 </body>
 
-<div class="footer">
+<div class="title">
 <a href="http://manuelvargas.me" target="_blank">manuelvargas.me</a><br>
 
 <a href="https://github.com/ManuelVargas1251" target="_blank">
