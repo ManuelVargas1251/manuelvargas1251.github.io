@@ -1,0 +1,102 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,500,700);
+
+a {
+  text-decoration:none;
+  color: white;
+}
+
+body {
+  background: #000;
+  color: white;
+  text-align: right;
+  font: 22px  Lato, sans-serif;
+  position: relative;
+  padding: 20px;
+  word-wrap: break-word;
+  /*top: 5vw;*/
+}
+
+video { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    transform: translateX(-50%) translateY(-50%);
+    background: url('') no-repeat;
+    background-size: cover;
+    transition: 1s opacity;
+  
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+    filter: brightness(40%)
+}
+
+.title {
+  position: absolute;
+  right: 0;
+  bottom: 45vh;
+  left: 0;
+  padding: 5rem;
+  font-size: 50px;
+  text-align: center;
+}
+
+.credit{
+	
+}
+
+.fa {
+	padding: 12px;
+}
+
+@media print, screen and (max-width: 767px) {
+	
+	body {
+		/*
+		visibility: hidden;
+		*/
+		padding: 40px;
+	}
+	
+	.title {
+		font-size: 55px;
+	}
+	
+	video{
+		visibility: hidden;
+		preload="none";
+	}
+	
+	.credit {
+		visibility: hidden;
+	}
+}
+
+/*
+@media print, screen and (max-width: 767px) {
+
+	
+	body {
+		padding: 40px;
+	}
+	
+	.title {
+		font-size: 70px;
+	}
+
+	video{
+		visibility: hidden;
+		preload="none";
+	}
+	
+	.credit{
+	
+		display: none;
+	}
+
+}
+*/
