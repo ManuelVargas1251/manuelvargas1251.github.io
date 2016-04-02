@@ -8,7 +8,9 @@ clock {
   top: 10vw;
 }
 
-
+a {
+	text-decoration:none;
+}
 /* Photo by: https://unsplash.com/aleskrivec */
 body {
   /*background-image: url(paris_c.jpg);*/
