@@ -1,0 +1,49 @@
+body {
+			background-color: #1c1c1c;
+			background-image: url("http://excitegym.com/wp-content/uploads/2015/03/nca2015_1crp.jpg");
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-attachment: fixed;
+			background-size: cover;
+			text-align: center;
+			color: white;
+			font-family: Arial;
+			font-size: 30px;
+			font-weight: 500;
+		}
+
+		header {
+			padding: 0px 0px 55px 0px
+		}
+
+		button {
+			width: 220px;
+			height: 58px;
+			padding: 5px;
+
+			color: white;
+			font-size: 25px;
+			
+			moz-border-radius: 0px;
+			-webkit-border-radius: 10px;
+			border: 0px ;
+			
+		}
+		
+		img {
+			height: 40%;
+			padding-top: 50px;
+		}
+		
+		@media print, screen and (max-width: 960px) {
+			
+			img {
+				height: 30%;
+				padding-top: 50px;
+			}
+			
+			button {
+				width: 260px;
+				height: 98px;
+			}
+		}
