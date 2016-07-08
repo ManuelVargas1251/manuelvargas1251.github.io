@@ -1,8 +1,13 @@
 
 <html>
-
+<head>
 	<meta name="theme-color" content="#1c1c1c">
-	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!--
+	<link rel="stylesheet" href="mock.css">
+	-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+</head>
 	
 	<style>
 		html {
@@ -23,7 +28,7 @@
 			padding: 0px 0px 55px 0px
 		}
 
-		button {
+		mybutton {
 			width: 220px;
 			height: 58px;
 			padding: 5px;
@@ -49,7 +54,7 @@
 				padding-top: 50px;
 			}
 			
-			button {
+			mybutton {
 				width: 260px;
 				height: 98px;
 			}
@@ -57,6 +62,31 @@
 
 
 	</style>
+	
+<div class="container-fluid">
+
+	<div class="dropdown">
+		<button class="btn btn-default pull-right dropdown-toggle" type="button" data-toggle="dropdown" >
+		Menu
+			<span class="caret"></span>
+		</button>
+		
+		<ul class="dropdown-menu dropdown-menu-right" >
+			<!--<li class=dropdown-header>Cheer</li>-->
+			<li><a href="#">Hotline</a></li>
+			<li><a href="#">Teams</a></li>
+			<!--<li role="separator" class="divider"></li>
+			<li class=dropdown-header>Gymnastics</li>-->
+			<li><a href="#">Hotline</a></li>
+			<li><a href="#">Teams</a></li>
+		</ul>
+	
+	</div>
+</div>	
+	
+	
+	
+	
 
 	<header>
 		<img src="http://excitegym.com/wp-content/uploads/2016/02/ExciteLogo.png" height="40%" style="padding-top: 50px;">
@@ -64,8 +94,8 @@
 		Cheer   &nbsp;&nbsp;    Gymnastics   &nbsp;&nbsp;    Tumble<p>
 	</header>
 	
-	<button style="background-color:#5d9430">Parent Portal</button>
+	<button class="btn btn-default" style="background-color:#5d9430">Parent Portal</button>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<button style="background-color:#df0024">Free Trial Class</button>
+	<button class="btn btn-default" style="background-color:#df0024">Free Trial Class</button>
 	
 </html>

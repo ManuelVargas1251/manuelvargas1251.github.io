@@ -18,6 +18,11 @@ body {
   background-size: cover;
 }
 
-h1,h2,h3,h4,p,a{
+h1,h2,h3,h4,p,a,li{
 	color: #fff;
 }
+
+img:not([src]){
+	visibility: hidden;
+}
+
