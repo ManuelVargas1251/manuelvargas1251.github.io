@@ -1,0 +1,25 @@
+##The website title
+name: My Keyboard Rocks
+##Markdown processor
+markdown: kramdown
+##syntax highlighter. change it to pygments
+highlighter: pygments
+
+# baseurl: https://demicat.github.io/mykeyboard.rocks
+baseurl:
+github_url: https://github.com/demicat/mykeyboard.rocks
+
+sass:
+  sass_dir: _sass
+  style: :compressed
+
+paginate: 7
+paginate_path: "page:num"
+
+##The website description (to be used in meta tags)
+description: User created WASD keyboard designs.
+##Some frequently used keywords on your website
+keywords: keyboard, custom, WASD V2, mechanical
+
+collections:
+  - icon-sets

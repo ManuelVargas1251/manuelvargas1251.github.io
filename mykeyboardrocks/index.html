@@ -1,0 +1,71 @@
+---
+layout: home
+title: Keyboard Layouts
+---
+
+{% if paginator.page == 1 %}
+<div class="center-list-view">
+	<h1>Layouts for WASD  keycap sets</h1>
+	<p>
+	Custom layouts for <a href="http://www.wasdkeyboards.com/">WASD</a> keycaps
+	sets.
+	See <a href="/help/#getting-keycaps">here</a> for information on how to
+	get layouts printed.
+	</p>
+</div>
+{% endif %}
+
+<ul class="themelist">
+	{% for theme in paginator.posts %}
+	<li class="theme-entry">
+		<!-- theme thumbnail and picture gallery -->
+		<ul class="gallery theme-thumbnail">
+			<li data-src="{{ site.baseurl }}/{{ theme.screenshots[0] }}">
+				<div class="thumbnail-wrap">
+					<img src="{{ site.baseurl }}/{{ theme.thumbnail }}"></img>
+				</div>
+			</li>
+			{% for imgsrc in theme.screenshots offset:1 %}
+				<li style="display:none;" data-src="{{ site.baseurl }}/{{ imgsrc }}"></li>
+			{% endfor %}
+		</ul>
+		<!-- theme description -->
+		<div class="theme-description">
+			<h2>{{ theme.title }}</h2>
+			<p>
+			{{ theme.content }}
+			</p>
+			{% for layout in theme.layouts %}
+				<a class="download"
+			     href="{{ site.baseurl }}/{{ layout.file }}"
+					download>{{ layout.name }}</a>
+			{% endfor %}
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+
+<div class="unit whole paginator">
+	{% if paginator.previous_page %}
+	<a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
+	{% endif %}
+	<span>Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+	{% if paginator.next_page %}
+	<a href="{{ paginator.next_page_path }}" class="next">Next</a>
+	{% endif %}
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+		var settings = {
+				<!-- mode: "fade", -->
+				speed: 300,
+				thumbnail: false,
+				animateThumb: false,
+				hideControlOnEnd: true,
+				counter: true,
+				closable: false,
+		};
+		$(".gallery").lightGallery(settings);
+});
+</script>

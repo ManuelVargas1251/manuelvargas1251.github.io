@@ -1,0 +1,51 @@
+---
+layout: home
+title: Icon Sets
+permalink: /icon-sets/
+---
+
+<div class="center-list-view">
+<h1>Icon Sets</h1>
+<p>
+This page contains a collection of icon sets that you might find useful when
+designing your own layouts.
+</p>
+</div>
+
+<ul class="themelist">
+	{% for icons in site.icon-sets %}
+	<li class="theme-entry">
+		<ul class="gallery theme-thumbnail">
+			<li data-src="{{ site.baseurl }}/{{ icons.screenshots[0] }}">
+				<div class="thumbnail-wrap">
+					<img src="{{ site.baseurl }}/{{ icons.thumbnail }}"></img>
+				</div>
+			</li>
+			{% for imgsrc in icons.screenshots offset:1 %}
+				<li style="display:none;" data-src="{{ site.baseurl }}/{{ imgsrc }}"></li>
+			{% endfor %}
+		</ul>
+
+		<div class="theme-description">
+			<h2>{{ icons.title }}</h2>
+			<p>
+			{{ icons.content }}
+			</p>
+			<a class="download" href="{{ site.baseurl }}/{{ icons.download }}" download>Download</a>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+
+<script type="text/javascript">
+$(document).ready(function() {
+		var settings = {
+				speed: 400,
+				thumbnail: false,
+				animateThumb: false,
+				hideControlOnEnd: true,
+				counter: true,
+		};
+		$(".gallery").lightGallery(settings);
+});
+</script>
