@@ -6,6 +6,7 @@ body {
   padding:50px;
   font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color:#777;
+  background: linear-gradient(135deg, #e1f2fb 0%, #f7e8f0 50%, #e3f6f0 100%);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -23,7 +24,14 @@ h1, h2, h3 {
 
 h1 {
 	
-  font-size:28px;
+  font-size:38px;
+}
+
+h1, .day-header {
+  /* Subtle white halo to separate text cleanly from the background gradient */
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.9), 
+               0 2px 4px rgba(255, 255, 255, 0.6);
+  transition: color 1.0s ease; /* Smooth color shift between days */
 }
 
 h2 {

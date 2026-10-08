@@ -5,13 +5,13 @@ let currentDay = new Date().getDay()
 let elements = document.querySelectorAll('a')
 
 let dayColors = [
-  '#cc334d',  //sunday
-  '#ad33cc',  //monday
-  '#337fcc',  //tuesday
-  '#33ccc3',  //wednesday
-  '#33cc57',  //thursday
-  '#c7cc33',  //friday
-  '#cc5733'   //saturday
+  '#a63d52',  //sunday
+  '#784488',  //monday
+  '#3d608a',  //tuesday
+  '#2d7a82',  //wednesday
+  '#3d7055',  //thursday
+  '#9e7a2b',  //friday
+  '#aa563f'   //saturday
 ];  //necessary semi ☹
 
 //changes color for each link tag on page
