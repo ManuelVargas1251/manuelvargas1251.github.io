@@ -1,12 +1,14 @@
-/* FUCK LATO */
 @import url(https://fonts.googleapis.com/css?family=Lato);
-
-
 body {
   padding:50px;
   font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color:#777;
-  background: linear-gradient(135deg, #e1f2fb 0%, #f7e8f0 50%, #e3f6f0 100%);
+  /* Uses a CSS variable '--day-tint' that defaults to your old pastel pink if JS hasn't loaded yet */
+  background: linear-gradient(135deg, #e1f2fb 0%, var(--day-tint, #f7e8f0) 50%, #e3f6f0 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  transition: background 0.8s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -196,33 +198,27 @@ footer {
 }
 
 @media print, screen and (max-width: 960px) {
-
   div.wrapper {
     width:auto;
     margin:0;
   }
-
   header, section, footer {
     float:none;
     position:static;
     width:auto;
   }
-
   header {
     padding-right:320px;
   }
-
   section {
     border:1px solid #e5e5e5;
     border-width:1px 0;
     padding:20px 0;
     margin:0 0 20px;
   }
-
   header a small {
     display:inline;
   }
-
   header ul {
     position:absolute;
     right:50px;
@@ -234,15 +230,12 @@ footer {
   body {
     word-wrap:break-word;
   }
-
   header {
     padding:0;
   }
-
   header ul, header p.view {
     position:static;
   }
-
   pre, code {
     word-wrap:normal;
   }
@@ -250,9 +243,8 @@ footer {
 
 @media print, screen and (max-width: 480px) {
   body {
-    padding:15px;
+    padding: 40px 20px 20px; /* Increases top padding while keeping sides/bottom balanced */
   }
-
   header ul {
     display:none;
   }

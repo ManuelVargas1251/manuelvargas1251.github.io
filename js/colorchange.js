@@ -1,20 +1,36 @@
-//gets the number value of the day of the week; 0 through 6
-let currentDay = new Date().getDay()
+const dayColors = [
+  '#a63d52',  // sunday - Deep Dusty Rose
+  '#784488',  // monday - Muted Plum / Vintage Violet
+  '#3d608a',  // tuesday - Slate Periwinkle Blue
+  '#2d7a82',  // wednesday - Deep Peacock / Dusty Teal
+  '#3d7055',  // thursday - Deep Sage / Forest Moss
+  '#9e7a2b',  // friday - Warm Honey Gold
+  '#aa563f'   // saturday - Muted Terracotta / Vintage Coral
+];
 
-//find all elements with link tag, 'a'
-let elements = document.querySelectorAll('a')
+function hexToRgba(hex, alpha) {
+  let cleanHex = hex.replace('#', '');
+  let r = parseInt(cleanHex.substring(0, 2), 16);
+  let g = parseInt(cleanHex.substring(2, 4), 16);
+  let b = parseInt(cleanHex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
-let dayColors = [
-  '#a63d52',  //sunday
-  '#784488',  //monday
-  '#3d608a',  //tuesday
-  '#2d7a82',  //wednesday
-  '#3d7055',  //thursday
-  '#9e7a2b',  //friday
-  '#aa563f'   //saturday
-];  //necessary semi ☹
+function applyDayTheme() {
+  const today = new Date().getDay(); // 0-6
+  const activeColor = dayColors[today];
 
-//changes color for each link tag on page
-[].slice.call(elements).forEach(function (e) {
-  e.style.color = dayColors[currentDay]
-})
+  // Target all links inside the header (both the title and Projects/Contact)
+  const headerLinks = document.querySelectorAll('header a');
+  headerLinks.forEach(link => {
+    link.style.color = activeColor;
+    link.style.transition = 'color 0.5s ease';
+  });
+
+  // 2. Dynamically update the CSS variable for the background gradient tint
+  const softTint = hexToRgba(activeColor, 0.12);
+  document.documentElement.style.setProperty('--day-tint', softTint);
+}
+
+// Run on page load
+applyDayTheme();
