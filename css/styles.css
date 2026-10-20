@@ -251,7 +251,6 @@ footer small {
     position: relative;
     padding-right: 0;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
@@ -281,6 +280,8 @@ footer small {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
     -webkit-tap-highlight-color: transparent;
+    margin-left: auto;
+    z-index: 1001;
   }
 
   .nav-toggle:hover {
@@ -334,19 +335,24 @@ footer small {
     transform: translateY(-6px) rotate(-45deg);
   }
 
-  /* Mobile Dropdown Menu */
+  /* Mobile Dropdown Menu: Right-aligned under the toggle */
   .site-nav {
     display: none;
-    width: 100%;
-    flex: 0 0 100%;
-    margin-top: 16px;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    z-index: 1000;
+    width: max-content;
+    min-width: 180px;
+    max-width: min(85vw, 260px);
+    margin: 0;
     padding: 10px;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     flex-direction: column;
     gap: 4px;
@@ -355,13 +361,15 @@ footer small {
 
   .site-nav.is-open {
     display: flex;
-    animation: navSlideDown 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: navSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .site-nav a {
     display: flex;
     align-items: center;
-    padding: 11px 14px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
     font-size: 15px;
     font-weight: 500;
     border-radius: 8px;
