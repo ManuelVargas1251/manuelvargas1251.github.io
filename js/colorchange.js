@@ -27,9 +27,10 @@ function applyDayTheme() {
     link.style.transition = 'color 0.5s ease';
   });
 
-  // 2. Dynamically update the CSS variable for the background gradient tint
+  // 2. Dynamically update the CSS variables for the background gradient tint and day color
   const softTint = hexToRgba(activeColor, 0.12);
   document.documentElement.style.setProperty('--day-tint', softTint);
+  document.documentElement.style.setProperty('--day-color', activeColor);
 }
 
 // Run on page load
