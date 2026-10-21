@@ -6,8 +6,8 @@ body {
   color: #777;
   font-size: 18px;
   line-height: 1.6;
-  /* Uses a CSS variable '--day-tint' that defaults to your old pastel pink if JS hasn't loaded yet */
-  background: linear-gradient(135deg, #e1f2fb 0%, var(--day-tint, #f7e8f0) 50%, #e3f6f0 100%);
+  /* Dynamically configured gradient stops with day-specific variables */
+  background: linear-gradient(135deg, var(--gradient-start, #e1f2fb) 0%, var(--day-tint, #f7e8f0) 50%, var(--gradient-end, #e3f6f0) 100%);
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
