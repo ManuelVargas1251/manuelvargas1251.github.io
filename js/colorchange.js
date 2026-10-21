@@ -45,7 +45,7 @@ function applyDayTheme(dayIndex) {
   const headerLinks = document.querySelectorAll('header a');
   headerLinks.forEach(link => {
     link.style.color = activeColor;
-    link.style.transition = 'color 0.5s ease';
+    link.style.transition = 'color 0.6s ease-in-out';
   });
 
   // Dynamically update CSS variables for gradient stops and active day color
@@ -62,3 +62,118 @@ if (typeof window !== 'undefined') {
 
 // Run on page load
 applyDayTheme();
+
+// Must match the 0.6s :root transition in styles.css
+const TRANSITION_MS = 600;
+const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function initThemeToy() {
+  const toy = document.getElementById('theme-toy');
+  if (!toy) return;
+  const toggle = toy.querySelector('.theme-toy-btn');
+  const radius = 130;
+  let current = new Date().getDay();
+  let locked = false;
+  let dragging = false;
+  let wasOpen = false;
+  let hovered = null;
+
+  // Fan the days out over the quarter-arc from left (180deg) to up (270deg)
+  const items = dayLabels.map((label, i) => {
+    const btn = document.createElement('button');
+    const angle = (180 + 90 * i / 6) * Math.PI / 180;
+    const tint = hexToRgba(dayColors[i], 0.18);
+    btn.type = 'button';
+    btn.className = 'theme-day';
+    btn.textContent = label;
+    btn.dataset.day = i;
+    btn.setAttribute('aria-label', dayNames[i]);
+    btn.style.setProperty('--x', `${Math.round(radius * Math.cos(angle))}px`);
+    btn.style.setProperty('--y', `${Math.round(radius * Math.sin(angle))}px`);
+    btn.style.background = `linear-gradient(${tint}, ${tint}), #fff`;
+    btn.style.color = dayColors[i];
+    btn.addEventListener('click', () => select(i));
+    toy.appendChild(btn);
+    return btn;
+  });
+
+  function markCurrent() {
+    items.forEach((btn, i) => btn.classList.toggle('is-current', i === current));
+  }
+
+  function setOpen(open) {
+    toy.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  }
+
+  function setHover(btn) {
+    if (hovered === btn) return;
+    if (hovered) hovered.classList.remove('is-hover');
+    hovered = btn;
+    if (hovered) hovered.classList.add('is-hover');
+  }
+
+  function select(i) {
+    if (locked) return;
+    locked = true;
+    toy.classList.add('is-locked');
+    current = i;
+    markCurrent();
+    setOpen(false);
+    applyDayTheme(i);
+    setTimeout(() => {
+      locked = false;
+      toy.classList.remove('is-locked');
+    }, TRANSITION_MS);
+  }
+
+  toggle.addEventListener('pointerdown', e => {
+    if (locked) return;
+    wasOpen = toy.classList.contains('is-open');
+    dragging = true;
+    toggle.setPointerCapture(e.pointerId);
+    if (!wasOpen) setOpen(true);
+  });
+
+  toggle.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    setHover(el && el.closest('.theme-day'));
+  });
+
+  toggle.addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false;
+    const target = hovered;
+    setHover(null);
+    if (target) select(Number(target.dataset.day));
+    else if (wasOpen) setOpen(false);
+  });
+
+  toggle.addEventListener('pointercancel', () => {
+    dragging = false;
+    setHover(null);
+  });
+
+  // detail === 0 means keyboard activation; pointer input is handled above
+  toggle.addEventListener('click', e => {
+    if (e.detail === 0 && !locked) setOpen(!toy.classList.contains('is-open'));
+  });
+
+  document.addEventListener('pointerdown', e => {
+    if (!toy.contains(e.target)) setOpen(false);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  markCurrent();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initThemeToy);
+} else {
+  initThemeToy();
+}
