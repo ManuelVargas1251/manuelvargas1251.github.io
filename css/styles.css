@@ -256,6 +256,8 @@ footer small {
   .wrapper {
     max-width: 100%;
     margin: 0;
+    padding-top: clamp(20px, 4vh, 36px);
+    padding-left: clamp(16px, 5vw, 24px);
   }
 
   header {
@@ -271,7 +273,7 @@ footer small {
 
   header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 34px;
     line-height: 1.2;
     letter-spacing: normal;
   }
@@ -285,12 +287,12 @@ footer small {
     height: 40px;
     padding: 8px 9px;
     background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
     cursor: pointer;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
     -webkit-tap-highlight-color: transparent;
     margin-left: auto;
@@ -300,7 +302,7 @@ footer small {
   .nav-toggle:hover {
     background: rgba(255, 255, 255, 0.95);
     border-color: var(--day-color, rgba(0, 0, 0, 0.25));
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   }
 
   .nav-toggle:focus-visible {
@@ -450,9 +452,6 @@ footer small {
   body {
     word-wrap: break-word;
   }
-  header {
-    padding: 0;
-  }
   pre, code {
     word-wrap: normal;
   }
@@ -463,7 +462,7 @@ footer small {
     padding: 30px 16px 16px;
   }
   header h1 {
-    font-size: 24px;
+    font-size: 30px;
   }
 }
 
@@ -494,9 +493,11 @@ footer small {
   height: 100%;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
@@ -506,7 +507,9 @@ footer small {
 .theme-toy-btn:hover,
 .theme-toy.is-open .theme-toy-btn {
   transform: scale(1.06);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--day-color, rgba(0, 0, 0, 0.25));
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .theme-toy-btn:focus-visible {
