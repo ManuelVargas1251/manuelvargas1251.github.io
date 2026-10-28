@@ -477,10 +477,10 @@ footer small {
 .theme-toy {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: 110px;
   width: 56px;
   height: 56px;
-  z-index: 1100;
+  z-index: 950;
   animation: toyPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
 }
 
@@ -591,3 +591,291 @@ footer small {
     transition-duration: 0.01s;
   }
 }
+
+/* ==========================================================================
+   Persistent Bottom Audio Player Bar
+   ========================================================================== */
+
+/* Safe body bottom spacing to prevent player from obscuring content */
+body {
+  padding-bottom: 90px;
+}
+
+.audio-player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+.audio-player-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 10px clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+/* Track Info Display */
+.audio-track-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.audio-indicator {
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.audio-track-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.audio-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #999;
+  font-weight: 700;
+}
+
+.audio-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Native Audio Element Controls */
+.audio-controls-wrapper {
+  flex: 1 1 360px;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+}
+
+.audio-controls-wrapper audio {
+  width: 100%;
+  height: 38px;
+  outline: none;
+  border-radius: 20px;
+}
+
+/* Actions: Source Toggles & Visualizer Slot */
+.audio-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.audio-source-toggles {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.audio-toggle-btn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.audio-toggle-btn:hover {
+  color: #222;
+}
+
+.audio-toggle-btn.active,
+.audio-toggle-btn.is-active {
+  background: #ffffff;
+  color: var(--day-color, #222);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.audio-toggle-btn:focus-visible,
+.audio-action-btn:focus-visible {
+  outline: 2px solid var(--day-color, #444);
+  outline-offset: 2px;
+}
+
+/* Visualizer Button Slot */
+.audio-visualizer-slot {
+  display: flex;
+  align-items: center;
+}
+
+.audio-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.audio-action-btn:hover,
+.audio-action-btn.is-active {
+  background: rgba(0, 0, 0, 0.08);
+  color: #222;
+}
+
+.audio-action-btn:active {
+  transform: scale(0.96);
+}
+
+/* Mobile Stacked Full-Width Responsive View */
+@media screen and (max-width: 768px) {
+  body {
+    padding-bottom: 112px;
+  }
+
+  .audio-player-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+  }
+
+  /* 1. Track Title / Status - Slim horizontal line */
+  .audio-track-info {
+    order: 1;
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .audio-indicator {
+    font-size: 14px;
+  }
+
+  .audio-track-text {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .audio-label {
+    display: none; /* Hide uppercase label on mobile to keep height compact */
+  }
+
+  .audio-title {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 2. HTML5 <audio> Element - Slim full width */
+  .audio-controls-wrapper {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .audio-controls-wrapper audio {
+    width: 100%;
+    height: 32px;
+    display: block;
+  }
+
+  /* 3. Control Buttons Row - Neatly compacted single row underneath */
+  .audio-actions {
+    order: 3;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .audio-source-toggles {
+    flex: 2 1 auto;
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+  }
+
+  .audio-toggle-btn {
+    flex: 1 1 50%;
+    text-align: center;
+    padding: 5px 8px;
+    font-size: 11px;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .audio-visualizer-slot {
+    flex: 1 1 auto;
+    display: flex;
+  }
+
+  .audio-action-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 5px 10px;
+    font-size: 11px;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .theme-toy {
+    bottom: 115px;
+    right: 16px;
+    z-index: 950;
+  }
+}
+
