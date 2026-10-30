@@ -58,6 +58,49 @@
 	<div class="theme-toy" id="theme-toy">
 		<button class="theme-toy-btn" type="button" aria-label="Choose day theme" aria-expanded="false"></button>
 	</div>
+
+	<!-- Persistent Bottom Audio Player Bar -->
+	<aside class="audio-player-bar" role="region" aria-label="Audio Player">
+		<div class="audio-player-container">
+			
+			<!-- Track Title / Status Display -->
+			<div class="audio-track-info">
+				<span class="audio-indicator" aria-hidden="true">🎵</span>
+				<div class="audio-track-text">
+					<span class="audio-label">Now Playing</span>
+					<span class="audio-title" id="player-track-title">Manuel - Me Now (Original)</span>
+				</div>
+			</div>
+
+			<!-- HTML5 Native Controls -->
+			<div class="audio-controls-wrapper">
+				<audio id="site-audio-player" preload="none" controls></audio>
+			</div>
+
+			<!-- Manual Source Toggles & Visualizer Extension Slot -->
+			<div class="audio-actions">
+				<!-- Source Toggle Pill Buttons -->
+				<div class="audio-source-toggles" role="group" aria-label="Audio Source Selection">
+					<button type="button" class="audio-toggle-btn active" id="btn-src-playlist" aria-pressed="true">
+						Playlist
+					</button>
+					<button type="button" class="audio-toggle-btn" id="btn-src-radio" aria-pressed="false">
+						Radio
+					</button>
+				</div>
+
+				<!-- Dedicated Visualizer Control Slot -->
+				<div class="audio-visualizer-slot" id="audio-visualizer-container">
+					<button type="button" class="audio-action-btn" id="visualizer-toggle-btn" title="Toggle Visualizer (Coming Soon)" aria-label="Toggle Audio Visualizer" aria-expanded="false">
+						<span class="btn-icon" aria-hidden="true">📊</span>
+						<span class="btn-label">Visualizer</span>
+					</button>
+				</div>
+			</div>
+
+		</div>
+	</aside>
+
 	<script src="js/scale.fix.js"></script>
 	<script src="js/nav.js"></script>
 	<script src="js/audio-player.js"></script>
