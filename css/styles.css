@@ -48,6 +48,10 @@ h1 {
   font-size: 52px;
 }
 
+h1 a{
+  font-style: italic;
+}
+
 h1, .day-header {
   /* Subtle white halo to separate text cleanly from the background gradient */
   text-shadow: 0 0 14px rgba(255, 255, 255, 0.95), 
