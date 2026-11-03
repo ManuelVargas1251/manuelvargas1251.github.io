@@ -58,6 +58,21 @@
     btnPlaylist.classList.toggle('is-active', !isRadio);
     btnPlaylist.setAttribute('aria-pressed', String(!isRadio));
     trackTitle.textContent = currentLabel();
+    updateMediaSessionMetadata(); // Update Media Session metadata with the current track information
+  }
+
+  // Updates the Media Session metadata with the current track information
+  // Feeds iOS lock screen / Control Center
+  function updateMediaSessionMetadata() {
+    if (!('mediaSession' in navigator)) return;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: currentLabel(),
+      artist: 'Manuel Vargas',
+      album: currentSource === 'radio' ? 'Live Radio' : 'Playlist',
+      artwork: [
+        { src: new URL('assets/img/artwork-512.png', document.baseURI).href, sizes: '512x512', type: 'image/png' }
+      ]
+    });
   }
 
   // load() clears any earlier error state so the native play button works again
@@ -90,8 +105,67 @@
   audio.src = currentUrl();
   updateActiveUI();
 
+  // Set up Media Session action handlers for play, pause, next, and previous track actions
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', function () {
+      // If it's live radio and the element is in an error or stalled state, refresh the source on play
+      if (currentSource === 'radio' && (audio.error || audio.paused)) {
+        audio.src = currentUrl();
+        audio.load();
+      }
+      return audio.play().catch(function (err) {
+        console.warn('Playback blocked:', err);
+      });
+    });
+    navigator.mediaSession.setActionHandler('pause', function () {
+      audio.pause();
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', function () {
+      if (currentSource === 'playlist') {
+        playPlaylistTrack((playlistIndex - 1 + PLAYLIST.length) % PLAYLIST.length);
+      }
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', function () {
+      if (currentSource === 'playlist') {
+        playPlaylistTrack(playlistIndex + 1);
+      }
+    });
+    audio.addEventListener('play', function () {
+      navigator.mediaSession.playbackState = 'playing';
+    });
+    audio.addEventListener('pause', function () {
+      navigator.mediaSession.playbackState = 'paused';
+    });
+  }
+
+  // --- Live Stream Stall & Wake Recovery ---
+  let radioStallTimeout = null;
+
+  audio.addEventListener('waiting', function () {
+    // If we are on the live radio and it gets stuck buffering after wake/pause
+    if (currentSource === 'radio') {
+      clearTimeout(radioStallTimeout);
+      // Give it 4 seconds to recover on its own; if not, force-refresh the live stream connection
+      radioStallTimeout = setTimeout(function () {
+        console.warn('Radio stream stalled after sleep/wake. Reconnecting live socket...');
+        audio.src = currentUrl();
+        audio.load();
+        audio.play().catch(function (err) {
+          console.warn('Auto-reconnect play blocked:', err);
+        });
+      }, 4000);
+    }
+  });
+
   audio.addEventListener('playing', function () {
+    // Clear the stall timeout once audio is flowing smoothly again
+    clearTimeout(radioStallTimeout);
     trackTitle.textContent = currentLabel();
+    // Update Media Session metadata with the current track information
+    updateMediaSessionMetadata();
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'playing';
+    }
   });
 
   // Playlist failure falls back to radio; radio failures walk through the mirrors
