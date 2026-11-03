@@ -108,6 +108,11 @@
   // Set up Media Session action handlers for play, pause, next, and previous track actions
   if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('play', function () {
+      // If it's live radio and the element is in an error or stalled state, refresh the source on play
+      if (currentSource === 'radio' && (audio.error || audio.paused)) {
+        audio.src = currentUrl();
+        audio.load();
+      }
       return audio.play().catch(function (err) {
         console.warn('Playback blocked:', err);
       });
@@ -133,7 +138,28 @@
     });
   }
 
+  // --- Live Stream Stall & Wake Recovery ---
+  let radioStallTimeout = null;
+
+  audio.addEventListener('waiting', function () {
+    // If we are on the live radio and it gets stuck buffering after wake/pause
+    if (currentSource === 'radio') {
+      clearTimeout(radioStallTimeout);
+      // Give it 4 seconds to recover on its own; if not, force-refresh the live stream connection
+      radioStallTimeout = setTimeout(function () {
+        console.warn('Radio stream stalled after sleep/wake. Reconnecting live socket...');
+        audio.src = currentUrl();
+        audio.load();
+        audio.play().catch(function (err) {
+          console.warn('Auto-reconnect play blocked:', err);
+        });
+      }, 4000);
+    }
+  });
+
   audio.addEventListener('playing', function () {
+    // Clear the stall timeout once audio is flowing smoothly again
+    clearTimeout(radioStallTimeout);
     trackTitle.textContent = currentLabel();
     // Update Media Session metadata with the current track information
     updateMediaSessionMetadata();
