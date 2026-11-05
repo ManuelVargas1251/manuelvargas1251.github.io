@@ -6,3 +6,5 @@ New space for front facing projects. Currently updating and removing old files.
 
 # :sunny: :wave: :thumbsup:
 - [Seafoam](https://www.figma.com/colors/seafoam/)
+- https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API
+- https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
