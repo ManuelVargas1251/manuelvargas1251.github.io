@@ -1,8 +1,10 @@
 [![Main](https://img.shields.io/badge/main-mnl.space-red.svg)](https://mnl.space)
 [![Email](https://img.shields.io/badge/email-main@mnl.space-blue.svg)](mailto:main@mnl.space)
 
-# [mnl.space](https://mnl.space)
+# [mnl.space](https://mnl.space) or [github.io](https://manuelvargas1251.github.io)
 New space for front facing projects. Currently updating and removing old files.
 
 # :sunny: :wave: :thumbsup:
 - [Seafoam](https://www.figma.com/colors/seafoam/)
+- https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API
+- https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
