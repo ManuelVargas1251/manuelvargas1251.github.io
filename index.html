@@ -20,6 +20,7 @@
 </head>
 
 <body>
+	<canvas id="waves" aria-hidden="true"></canvas>
 	<div class="wrapper">
 		<header>
 			<h1>
@@ -57,7 +58,206 @@
 		</footer>
 	</div>
 	<div class="theme-toy" id="theme-toy">
-		<button class="theme-toy-btn" type="button" aria-label="Choose day theme" aria-expanded="false"></button>
+		<button class="theme-toy-btn" type="button" aria-label="Choose day theme" aria-expanded="false" title="Change Day Color Palette">🎨</button>
+	</div>
+
+	<!-- Audio Inspector: Waves and Gradient tabs -->
+	<div class="audio-inspector-panel is-collapsed" id="audio-inspector" aria-label="Audio Inspector">
+		<div class="inspector-header">
+			<div class="inspector-title-group">
+				<span class="inspector-icon" aria-hidden="true">
+					<span class="eq-bar eq-bar-1"></span>
+					<span class="eq-bar eq-bar-2"></span>
+					<span class="eq-bar eq-bar-3"></span>
+				</span>
+				<div class="inspector-header-text">
+					<span class="inspector-title">Audio Inspector</span>
+					<span class="inspector-source-badge" id="inspector-source-badge">Playlist (Manuel - Me Now)</span>
+				</div>
+			</div>
+			<div class="inspector-header-actions">
+				<span class="inspector-status" id="inspector-audio-status">Idle</span>
+				<button type="button" class="inspector-close-btn" id="inspector-close-btn" title="Close Audio Inspector" aria-label="Close Audio Inspector">✕</button>
+			</div>
+		</div>
+
+		<div class="inspector-tabs" role="tablist" aria-label="Audio Inspector sections">
+			<button type="button" role="tab" class="inspector-tab is-active" id="inspector-tab-btn-waves" data-tab="waves" aria-selected="true" aria-controls="inspector-tab-waves">Waves</button>
+			<button type="button" role="tab" class="inspector-tab" id="inspector-tab-btn-gradient" data-tab="gradient" aria-selected="false" aria-controls="inspector-tab-gradient" tabindex="-1">Gradient</button>
+		</div>
+
+		<!-- Tab 1: Waves -->
+		<div class="inspector-panel" id="inspector-tab-waves" role="tabpanel" aria-labelledby="inspector-tab-btn-waves">
+			<div class="inspector-mode" role="group" aria-label="Wave render mode">
+				<button type="button" class="inspector-mode-btn is-active" data-wave-mode="bands" aria-pressed="true">3-Band Layers</button>
+				<button type="button" class="inspector-mode-btn" data-wave-mode="single" aria-pressed="false">Single Curve</button>
+			</div>
+
+			<div class="inspector-grid">
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">Bass Wave</span>
+						<span class="metric-pct" id="pct-wave-bass">0%</span>
+					</div>
+					<div class="metric-sub">Lows, left</div>
+					<div class="metric-bar-bg">
+						<div class="metric-bar-fill bar-bass-fill" id="bar-wave-bass" style="width: 0%"></div>
+					</div>
+				</div>
+
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">Mid Wave</span>
+						<span class="metric-pct" id="pct-wave-mid">0%</span>
+					</div>
+					<div class="metric-sub">Mids, center</div>
+					<div class="metric-bar-bg">
+						<div class="metric-bar-fill" id="bar-wave-mid" style="width: 0%"></div>
+					</div>
+				</div>
+
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">High Wave</span>
+						<span class="metric-pct" id="pct-wave-high">0%</span>
+					</div>
+					<div class="metric-sub">Highs, right</div>
+					<div class="metric-bar-bg">
+						<div class="metric-bar-fill" id="bar-wave-high" style="width: 0%"></div>
+					</div>
+				</div>
+
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">FFT Size</span>
+					</div>
+					<div class="metric-value-row">
+						<span class="metric-value" id="val-fft-size">1024</span>
+					</div>
+					<div class="metric-sub" id="val-sample-rate">- Hz</div>
+				</div>
+
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">Bars</span>
+					</div>
+					<div class="metric-value-row">
+						<span class="metric-value" id="val-wave-bars">0</span>
+					</div>
+					<div class="metric-sub" id="val-wave-layout">desktop</div>
+				</div>
+
+				<div class="inspector-card">
+					<div class="metric-top">
+						<span class="metric-label">Render Mode</span>
+					</div>
+					<div class="metric-value-row">
+						<span class="metric-value status-badge" id="val-wave-mode">bands</span>
+					</div>
+					<div class="metric-sub">40 Hz - 16 kHz, log</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tab 2: Background Gradient -->
+		<div class="inspector-panel" id="inspector-tab-gradient" role="tabpanel" aria-labelledby="inspector-tab-btn-gradient" hidden>
+		<div class="inspector-grid">
+			<!-- Overall Loudness -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Loudness</span>
+					<span class="metric-pct" id="pct-loudness">0%</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-loudness-db">-∞ dBFS</span>
+				</div>
+				<div class="metric-bar-bg">
+					<div class="metric-bar-fill" id="bar-loudness" style="width: 0%"></div>
+				</div>
+			</div>
+
+			<!-- Bass Frequency Intensity -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Bass (Bin 2)</span>
+					<span class="metric-pct" id="pct-bass">0%</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-bass-db">-∞ dBFS</span>
+				</div>
+				<div class="metric-bar-bg">
+					<div class="metric-bar-fill bar-bass-fill" id="bar-bass" style="width: 0%"></div>
+				</div>
+			</div>
+
+			<!-- Day-Tint Alpha & Swatch -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Day-Tint Alpha</span>
+					<span class="color-swatch" id="inspector-color-swatch"></span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-tint-alpha">0.120</span>
+				</div>
+				<div class="metric-sub" id="val-day-color">#1b7a70</div>
+			</div>
+
+			<!-- Drift Phase -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Drift Phase</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-pulse-radius">0°</span>
+				</div>
+				<div class="metric-sub" id="val-pulse-xy">Auto-gain ×1.00</div>
+			</div>
+
+			<!-- Gradient Sweep Angle -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Gradient Angle</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-gradient-angle">135.0°</span>
+				</div>
+				<div class="metric-sub">Sweep ±25°</div>
+			</div>
+
+			<!-- Center Stop Position -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Center Stop Pos</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-gradient-pos">50.0%</span>
+				</div>
+				<div class="metric-sub">Band center, fixed ±6%</div>
+			</div>
+
+			<!-- Drift Speed -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Drift Speed</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value" id="val-bg-scale">0.25 rad/s</span>
+				</div>
+				<div class="metric-sub">Bass-boosted</div>
+			</div>
+
+			<!-- Web Audio Context State -->
+			<div class="inspector-card">
+				<div class="metric-top">
+					<span class="metric-label">Engine & Context</span>
+				</div>
+				<div class="metric-value-row">
+					<span class="metric-value status-badge" id="val-audio-context">idle</span>
+				</div>
+				<div class="metric-sub" id="val-buffer-info">fftSize: 128 (64 bins)</div>
+			</div>
+		</div>
+		</div>
 	</div>
 
 	<!-- Persistent Bottom Audio Player Bar -->
