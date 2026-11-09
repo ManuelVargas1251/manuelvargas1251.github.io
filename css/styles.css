@@ -1,14 +1,36 @@
 /* ==========================================================================
-   1. EXTERNAL ASSETS & CUSTOM PROPERTIES
+   TABLE OF CONTENTS
+   1. Property registrations (@property)
+   2. Root variables & transitions
+   3. Base & reset
+   4. Typography & content elements
+   5. Layout & structure
+   6. Components: header & navigation
+   7. Components: theme toy
+   8. Components: audio player bar
+   9. Responsive, print & reduced motion
+   10. Main content
+   11. Audio-reactive hooks & Audio Inspector
+
+   Audio-reactive variables written by js/audio-reactive.js:
+   --day-tint, --gradient-angle, --aurora-pos-a, --audio-loudness, --audio-bass
    ========================================================================== */
 @import url(https://fonts.googleapis.com/css?family=Lato);
 
-/* Registered so the browser can interpolate colors inside the gradient */
+
+/* ==========================================================================
+   1. PROPERTY REGISTRATIONS
+   Registered so the browser can interpolate values inside the gradient
+   ========================================================================== */
 @property --gradient-start { syntax: '<color>'; inherits: true; initial-value: #e1f2fb; }
 @property --day-tint { syntax: '<color>'; inherits: true; initial-value: #f7e8f0; }
 @property --gradient-end { syntax: '<color>'; inherits: true; initial-value: #e3f6f0; }
 @property --day-color { syntax: '<color>'; inherits: true; initial-value: #777777; }
 
+
+/* ==========================================================================
+   2. ROOT VARIABLES & TRANSITIONS
+   ========================================================================== */
 :root {
   transition: --gradient-start 0.6s ease-in-out,
               --day-tint 0.6s ease-in-out,
@@ -18,7 +40,7 @@
 
 
 /* ==========================================================================
-   2. BASE & RESET STYLES
+   3. BASE & RESET
    ========================================================================== */
 body {
   margin: 0;
@@ -35,6 +57,10 @@ body {
   box-sizing: border-box;
 }
 
+
+/* ==========================================================================
+   4. TYPOGRAPHY & CONTENT ELEMENTS
+   ========================================================================== */
 h1, h2, h3, h4, h5, h6 {
   color: #222;
   margin: 0 0 20px;
@@ -150,7 +176,7 @@ dt {
 
 
 /* ==========================================================================
-   3. LAYOUT & STRUCTURE
+   5. LAYOUT & STRUCTURE
    ========================================================================== */
 .wrapper {
   max-width: 1320px;
@@ -198,7 +224,7 @@ footer small {
 
 
 /* ==========================================================================
-   4. COMPONENTS (Navigation, Theme Toy, Audio Player)
+   6. COMPONENTS: HEADER & NAVIGATION
    ========================================================================== */
 
 /* Site Navigation & Hamburger Toggle */
@@ -251,6 +277,10 @@ footer small {
 .site-nav .nav-label {
   display: none; /* Hidden on desktop, shown on mobile */
 }
+
+/* ==========================================================================
+   7. COMPONENTS: THEME TOY
+   ========================================================================== */
 
 /* Floating Radial Theme-Switcher Toy */
 .theme-toy {
@@ -345,6 +375,10 @@ footer small {
 .theme-toy.is-open .theme-day.is-hover {
   transform: translate(var(--x), var(--y)) scale(1.25);
 }
+
+/* ==========================================================================
+   8. COMPONENTS: AUDIO PLAYER BAR
+   ========================================================================== */
 
 /* Persistent Bottom Audio Player Bar */
 .audio-player-bar {
@@ -506,7 +540,7 @@ footer small {
 
 
 /* ==========================================================================
-   5. RESPONSIVE MEDIA QUERIES
+   9. RESPONSIVE, PRINT & REDUCED MOTION
    ========================================================================== */
 
 @media screen and (max-width: 768px) {
