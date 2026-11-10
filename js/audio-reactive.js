@@ -122,6 +122,7 @@
     pulseRadius: null,
     pulseXy: null,
     gradientAngle: null,
+    angleNeedle: null,
     gradientPos: null,
     bgScale: null,
     audioContext: null
@@ -398,6 +399,9 @@
     // Gradient Sweep Angle
     if (ui.gradientAngle) {
       ui.gradientAngle.textContent = `${angleDeg.toFixed(1)}°`;
+    }
+    if (ui.angleNeedle) {
+      ui.angleNeedle.style.transform = `rotate(${angleDeg.toFixed(1)}deg)`;
     }
 
     // Center Stop Pos
@@ -743,6 +747,7 @@
     ui.pulseRadius = document.getElementById('val-pulse-radius');
     ui.pulseXy = document.getElementById('val-pulse-xy');
     ui.gradientAngle = document.getElementById('val-gradient-angle');
+    ui.angleNeedle = document.getElementById('angle-needle');
     ui.gradientPos = document.getElementById('val-gradient-pos');
     ui.bgScale = document.getElementById('val-bg-scale');
     ui.audioContext = document.getElementById('val-audio-context');
