@@ -23,6 +23,9 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
+  // Mobile browsers restrict stream analysis (and createMediaElementSource can mute cross-origin audio on iOS)
+  const audioReactiveDisabled = !!(window.Device && window.Device.isMobile());
+
   // Baseline alpha matching colorchange.js resting day-tint state
   const BASELINE_ALPHA = 0.12;
 
@@ -233,6 +236,7 @@
    * Initialize Web Audio API components once on user interaction
    */
   function initAudioContext() {
+    if (audioReactiveDisabled) return false;
     if (isInitialized) {
       ensureAudioContextResumed();
       return true;
@@ -569,6 +573,7 @@
    */
   function startAnimationLoop() {
     if (isLoopRunning) return;
+    if (audioReactiveDisabled) return;
     if (prefersReducedMotion || !isEnabled) return;
     if (document.visibilityState === 'hidden') return;
     if (!audio || audio.paused || audio.ended) return;
