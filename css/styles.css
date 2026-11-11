@@ -29,7 +29,6 @@
 @property --day-color { syntax: '<color>'; inherits: true; initial-value: #777777; }
 @property --gradient-angle { syntax: '<angle>'; inherits: true; initial-value: 135deg; }
 @property --aurora-pos-a { syntax: '<percentage>'; inherits: true; initial-value: 50%; }
-@property --drift-chroma { syntax: '<number>'; inherits: true; initial-value: 1; }
 
 
 /* ==========================================================================
@@ -1424,35 +1423,17 @@ footer small {
   flex: 1 1 auto;
 }
 
-/* The loop starts and ends on the resting values (135deg, 50%, chroma 1), so the first frame after pressing play matches the static page */
-@keyframes ambient-drift {
-  0%, 100% { --gradient-angle: 135deg; --aurora-pos-a: 50%; --drift-chroma: 1; }
-  /* 25%      { --gradient-angle: 100deg; --aurora-pos-a: 30%; } */
-  25%      { --gradient-angle: 60deg; --aurora-pos-a: 14%; }
-  50%      { --drift-chroma: 1.7; }
-  /* 75%      { --gradient-angle: 170deg; --aurora-pos-a: 70%; } */
-  75%      { --gradient-angle: 210deg; --aurora-pos-a: 90%; }
+/* 495deg looks the same as 135deg (the resting angle), so the loop has no seam and play does not jump */
+@keyframes ambient-spin {
+  from { --gradient-angle: 135deg; }
+  to   { --gradient-angle: 495deg; }
 }
 
-/* Each colour breathes between its pastel and a deeper version of itself: only chroma changes, so hue and lightness stay put */
-@supports (background-image: linear-gradient(oklch(from red l c h), blue)) {
-  .is-mobile-device body {
-    background-image: linear-gradient(
-      var(--gradient-angle, 135deg),
-      oklch(from var(--gradient-start, #e1f2fb) l calc(c * var(--drift-chroma)) h) 0%,
-      var(--day-tint, #f7e8f0) calc(var(--aurora-pos-a, 50%) - 6%),
-      var(--day-tint, #f7e8f0) calc(var(--aurora-pos-a, 50%) + 6%),
-      oklch(from var(--gradient-end, #e3f6f0) l calc(c * var(--drift-chroma)) h) 100%
-    );
-  }
-}
-
-/* The drift only attaches once js/ambient.js sees audio actually playing (.ambient-started) */
+/* The spin only attaches once js/ambient.js sees audio actually playing (.ambient-started) */
 @media (prefers-reduced-motion: no-preference) {
   .is-mobile-device.ambient-started {
-    /* Smooth easing: animating a fixed full-screen gradient repaints each frame, so keep it slow */
-    /* animation: ambient-drift 36s ease-in-out infinite; */
-    animation: ambient-drift 14s linear infinite;
+    /* Seconds per full turn */
+    animation: ambient-spin 1.5s linear infinite;
   }
 
   .is-mobile-device.ambient-started.ambient-paused {
