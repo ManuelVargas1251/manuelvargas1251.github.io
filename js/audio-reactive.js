@@ -71,6 +71,8 @@
   // Separate high-resolution analyser for the spectrum (same AudioContext and source)
   let spectrumAnalyser = null;
   let spectrumData = null;
+  let soloBand = null;
+  let soloGains = null;
 
   let isInitialized = false;
   let isLoopRunning = false;
@@ -102,6 +104,8 @@
     tabs: [],
     tabPanels: {},
     modeBtns: [],
+    soloBtns: [],
+    soloStatus: null,
     waveBassPct: null,
     waveBassBar: null,
     waveMidPct: null,
@@ -282,9 +286,33 @@
         audio.__mediaSourceNode = sourceNode;
       }
 
-      // MediaElementSource -> AnalyserNode -> Destination (speakers)
+      // Analysis stays before the output filters so all waves remain responsive while soloed.
       sourceNode.connect(analyser);
-      analyser.connect(audioCtx.destination);
+      soloGains = {};
+      ['full', 'bass', 'mid', 'high'].forEach(function (band) {
+        const gain = audioCtx.createGain();
+        gain.gain.value = band === 'full' ? 1 : 0;
+        soloGains[band] = gain;
+        gain.connect(audioCtx.destination);
+        let last = analyser;
+        if (band === 'bass' || band === 'mid') {
+          const lowpass = audioCtx.createBiquadFilter();
+          lowpass.type = 'lowpass';
+          lowpass.frequency.value = band === 'bass' ? 250 : 2500;
+          lowpass.Q.value = Math.SQRT1_2;
+          last.connect(lowpass);
+          last = lowpass;
+        }
+        if (band === 'high' || band === 'mid') {
+          const highpass = audioCtx.createBiquadFilter();
+          highpass.type = 'highpass';
+          highpass.frequency.value = band === 'high' ? 2500 : 250;
+          highpass.Q.value = Math.SQRT1_2;
+          last.connect(highpass);
+          last = highpass;
+        }
+        last.connect(gain);
+      });
 
       spectrumAnalyser = audioCtx.createAnalyser();
       spectrumAnalyser.fftSize = 1024;
@@ -301,6 +329,40 @@
       console.warn('[AudioReactive] Error initializing Web Audio graph:', err);
       return false;
     }
+  }
+  // Set the solo band for audio output (full, bass, mid, high)
+  function setSolo(band) {
+    if (band !== null && band !== 'bass' && band !== 'mid' && band !== 'high') {
+      console.warn('[AudioReactive] Invalid solo band:', band);
+      return false;
+    }
+    if (band && (!window.Waves || window.Waves.getMode() !== 'bands' || !initAudioContext())) return false;
+    if (band === soloBand) return true;
+
+    if (soloGains) {
+      const now = audioCtx.currentTime;
+      Object.keys(soloGains).forEach(function (key) {
+        const gain = soloGains[key].gain;
+        if (gain.cancelAndHoldAtTime) {
+          gain.cancelAndHoldAtTime(now);
+        } else {
+          gain.cancelScheduledValues(now);
+          gain.setValueAtTime(gain.value, now);
+        }
+        gain.linearRampToValueAtTime(key === (band || 'full') ? 1 : 0, now + 0.08);
+      });
+    }
+    soloBand = band;
+    if (window.Waves) window.Waves.setSolo(band);
+    ui.soloBtns.forEach(function (btn) {
+      const selected = btn.dataset.soloBand === band;
+      btn.classList.toggle('is-active', selected);
+      btn.setAttribute('aria-pressed', String(selected));
+    });
+    if (ui.soloStatus) {
+      ui.soloStatus.textContent = band ? 'Solo: ' + band.charAt(0).toUpperCase() + band.slice(1) : 'Solo off. Click a wave or use the solo buttons.';
+    }
+    return true;
   }
 
   /**
@@ -711,6 +773,7 @@
       btn.classList.toggle('is-active', selected);
       btn.setAttribute('aria-pressed', String(selected));
     });
+    ui.soloBtns.forEach(function (btn) { btn.disabled = mode !== 'bands'; });
     writeStored(STORAGE_MODE, mode);
     refreshInspector();
   }
@@ -728,7 +791,9 @@
       waves: document.getElementById('inspector-tab-waves'),
       gradient: document.getElementById('inspector-tab-gradient')
     };
-    ui.modeBtns = Array.prototype.slice.call(document.querySelectorAll('.inspector-mode-btn'));
+    ui.modeBtns = Array.prototype.slice.call(document.querySelectorAll('[data-wave-mode]'));
+    ui.soloBtns = Array.prototype.slice.call(document.querySelectorAll('[data-solo-band]'));
+    ui.soloStatus = document.getElementById('solo-status');
     ui.waveBassPct = document.getElementById('pct-wave-bass');
     ui.waveBassBar = document.getElementById('bar-wave-bass');
     ui.waveMidPct = document.getElementById('pct-wave-mid');
@@ -882,6 +947,11 @@
     ui.modeBtns.forEach(function (btn) {
       btn.addEventListener('click', function () { setWaveMode(btn.dataset.waveMode); });
     });
+    ui.soloBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setSolo(soloBand === btn.dataset.soloBand ? null : btn.dataset.soloBand);
+      });
+    });
   }
 
   /**
@@ -923,6 +993,8 @@
     reset: resetCssModulations,
     getAudioContext: function () { return audioCtx; },
     getAnalyser: function () { return analyser; },
+    setSolo: setSolo,
+    getSolo: function () { return soloBand; },
     getLoudness: function () { return currentLoudness; },
     getBass: function () { return currentBass; },
     setEnabled: function (enabled) {
