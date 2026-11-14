@@ -91,6 +91,12 @@
 				<button type="button" class="inspector-mode-btn is-active" data-wave-mode="bands" aria-pressed="true">3-Band Layers</button>
 				<button type="button" class="inspector-mode-btn" data-wave-mode="single" aria-pressed="false">Single Curve</button>
 			</div>
+			<div class="inspector-mode" role="group" aria-label="Solo frequency band">
+				<button type="button" class="inspector-mode-btn inspector-solo-btn" data-solo-band="bass" aria-pressed="false">Solo Bass</button>
+				<button type="button" class="inspector-mode-btn inspector-solo-btn" data-solo-band="mid" aria-pressed="false">Solo Mid</button>
+				<button type="button" class="inspector-mode-btn inspector-solo-btn" data-solo-band="high" aria-pressed="false">Solo High</button>
+			</div>
+			<div class="metric-sub" id="solo-status" role="status">Solo off. Click a wave or use the solo buttons.</div>
 
 			<div class="inspector-grid">
 				<div class="inspector-card">
