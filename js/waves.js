@@ -37,13 +37,15 @@
   const CROSS_HIGH = Math.log(2500 / F_MIN) / Math.log(F_MAX / F_MIN);
   const CROSSFADE = 0.15;
 
-  // Drawn back to front. attack/release are per-frame lerp factors; floor stops quiet bands being over-amplified.
+  // Frequency order; attack/release are per-frame lerp factors, and floor limits quiet-band amplification.
   // whiteMix range: 0.0 - 1.111
   const BANDS = [
     { name: 'bass', maxHeight: 0.94, attack: 0.35, release: 0.08, floor: 0.30, whiteMix: 1.111, alpha: 1.6 },
     { name: 'mid', maxHeight: 0.44, attack: 0.45, release: 0.12, floor: 0.25, whiteMix: 1.111, alpha: 1.2 },
     { name: 'high', maxHeight: 0.7, attack: 0.60, release: 0.20, floor: 0.20, whiteMix: 1.111, alpha: 1.5 }
   ];
+  // Draw Bass and High behind Mid; analysis arrays retain frequency order.
+  const DRAW_ORDER = [0, 2, 1];
   // Below 1 lifts typical levels so everyday peaks reach about mid-page, not just the loudest hits
   const LEVEL_CURVE = 0.75;
 
@@ -270,7 +272,7 @@
   function draw(rgb) {
     ctx.clearRect(0, 0, width, height);
     if (bandsAlpha > 0.01) {
-      for (let b = 0; b < BANDS.length; b++) {
+      for (const b of DRAW_ORDER) {
         ctx.globalAlpha = fade * bandsAlpha * (soloBand && soloBand !== BANDS[b].name ? 0.18 : 1);
         const emphasis = soloBand === BANDS[b].name ? 1.15 + 0.08 * Math.sin(soloPhase) : 1;
         drawCurve(bandLevels[b], weights[b], BANDS[b].maxHeight, BANDS[b].whiteMix, BANDS[b].alpha * emphasis, rgb);
@@ -350,7 +352,8 @@
     const y = (event.clientY - rect.top) * height / rect.height;
     let band = null;
     if (fade >= 0.01 && x >= 0 && x <= width && y >= 0 && y <= playerTopPx) {
-      for (let b = BANDS.length - 1; b >= 0; b--) {
+      for (let i = DRAW_ORDER.length - 1; i >= 0; i--) {
+        const b = DRAW_ORDER[i];
         if (ctx.isPointInPath(curvePath(bandLevels[b], weights[b], BANDS[b].maxHeight).path, x, y)) {
           band = BANDS[b].name === soloBand ? null : BANDS[b].name;
           break;
