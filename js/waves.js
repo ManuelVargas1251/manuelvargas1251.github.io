@@ -37,13 +37,15 @@
   const CROSS_HIGH = Math.log(2500 / F_MIN) / Math.log(F_MAX / F_MIN);
   const CROSSFADE = 0.15;
 
-  // Drawn back to front. attack/release are per-frame lerp factors; floor stops quiet bands being over-amplified.
+  // Frequency order; attack/release are per-frame lerp factors, and floor limits quiet-band amplification.
   // whiteMix range: 0.0 - 1.111
   const BANDS = [
     { name: 'bass', maxHeight: 0.94, attack: 0.35, release: 0.08, floor: 0.30, whiteMix: 1.111, alpha: 1.6 },
     { name: 'mid', maxHeight: 0.44, attack: 0.45, release: 0.12, floor: 0.25, whiteMix: 1.111, alpha: 1.2 },
     { name: 'high', maxHeight: 0.7, attack: 0.60, release: 0.20, floor: 0.20, whiteMix: 1.111, alpha: 1.5 }
   ];
+  // Draw Bass and High behind Mid; analysis arrays retain frequency order.
+  const DRAW_ORDER = [0, 2, 1];
   // Below 1 lifts typical levels so everyday peaks reach about mid-page, not just the loudest hits
   const LEVEL_CURVE = 0.75;
 
@@ -65,6 +67,8 @@
   let weights = [];
   let peaks = BANDS.map(function () { return 0.6; });
   let mode = 'bands';
+  let soloBand = null;
+  let soloPhase = 0;
   let bandsAlpha = 1;
   let singleAlpha = 0;
   let singleLevels = new Float32Array(BARS_DESKTOP);
@@ -223,9 +227,8 @@
    * Filled, smoothed curve from per-bar levels. `weight` (optional) scales the rest height so a band's
    * curve sits on the baseline outside its own region.
    */
-  function drawCurve(arr, weight, maxHeight, whiteMix, alphaScale, rgb) {
+  function curvePath(arr, weight, maxHeight) {
     const bars = arr.length;
-    const crest = pastel(rgb, whiteMix);
     const baseline = playerTopPx;
     const maxPx = baseline * maxHeight * (mobile ? MOBILE_HEIGHT_SCALE : 1);
     const restPx = baseline * REST_HEIGHT;
@@ -235,36 +238,44 @@
       return baseline - (restPx * (weight ? weight[i] : 1) + Math.pow(arr[i], LEVEL_CURVE) * maxPx);
     }
 
-    ctx.beginPath();
-    ctx.moveTo(0, baseline);
-    ctx.lineTo(0, yAt(0));
+    const path = new Path2D();
+    path.moveTo(0, baseline);
+    path.lineTo(0, yAt(0));
     // Quadratic smoothing through midpoints gives a soft curve instead of jagged bars
     for (let i = 1; i < bars; i++) {
       const mx = ((i - 1) * stepX + i * stepX) / 2;
       const my = (yAt(i - 1) + yAt(i)) / 2;
-      ctx.quadraticCurveTo((i - 1) * stepX, yAt(i - 1), mx, my);
+      path.quadraticCurveTo((i - 1) * stepX, yAt(i - 1), mx, my);
     }
-    ctx.lineTo(width, yAt(bars - 1));
-    ctx.lineTo(width, baseline);
-    ctx.closePath();
+    path.lineTo(width, yAt(bars - 1));
+    path.lineTo(width, baseline);
+    path.closePath();
 
     let top = baseline;
     for (let i = 0; i < bars; i++) top = Math.min(top, yAt(i));
+    return { path: path, top: top };
+  }
+
+  function drawCurve(arr, weight, maxHeight, whiteMix, alphaScale, rgb) {
+    const crest = pastel(rgb, whiteMix);
+    const baseline = playerTopPx;
+    const curve = curvePath(arr, weight, maxHeight);
     const a = MAX_ALPHA * alphaScale;
-    const gradient = ctx.createLinearGradient(0, top, 0, baseline);
+    const gradient = ctx.createLinearGradient(0, curve.top, 0, baseline);
     gradient.addColorStop(0, `rgba(${crest.r}, ${crest.g}, ${crest.b}, ${a.toFixed(3)})`);
     gradient.addColorStop(0.5, `rgba(255, 255, 255, ${(a * 0.5).toFixed(3)})`);
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = gradient;
-    ctx.fill();
+    ctx.fill(curve.path);
   }
 
   function draw(rgb) {
     ctx.clearRect(0, 0, width, height);
     if (bandsAlpha > 0.01) {
-      ctx.globalAlpha = fade * bandsAlpha;
-      for (let b = 0; b < BANDS.length; b++) {
-        drawCurve(bandLevels[b], weights[b], BANDS[b].maxHeight, BANDS[b].whiteMix, BANDS[b].alpha, rgb);
+      for (const b of DRAW_ORDER) {
+        ctx.globalAlpha = fade * bandsAlpha * (soloBand && soloBand !== BANDS[b].name ? 0.18 : 1);
+        const emphasis = soloBand === BANDS[b].name ? 1.15 + 0.08 * Math.sin(soloPhase) : 1;
+        drawCurve(bandLevels[b], weights[b], BANDS[b].maxHeight, BANDS[b].whiteMix, BANDS[b].alpha * emphasis, rgb);
       }
     }
     if (singleAlpha > 0.01) {
@@ -287,6 +298,7 @@
     }
 
     if (++framesSinceMeasure >= PLAYER_MEASURE_FRAMES) measurePlayerTop();
+    if (soloBand) soloPhase += dt * 2;
     const singleTarget = mode === 'single' ? 1 : 0;
     singleAlpha += (singleTarget - singleAlpha) * MODE_BLEND_RATE;
     bandsAlpha += ((1 - singleTarget) - bandsAlpha) * MODE_BLEND_RATE;
@@ -318,6 +330,9 @@
    */
   function setMode(next) {
     if (next !== 'bands' && next !== 'single') return false;
+    if (next === 'single' && soloBand && window.AudioReactiveGradient) {
+      window.AudioReactiveGradient.setSolo(null);
+    }
     mode = next;
     if (fade < 0.01) {
       singleAlpha = mode === 'single' ? 1 : 0;
@@ -326,11 +341,34 @@
     return true;
   }
 
+  function handleClick(event) {
+    if (!ctx || mode !== 'bands' || (fade < 0.01 && !soloBand) || event.detail === 0 ||
+        getComputedStyle(canvas).display === 'none') return;
+    if (event.target.closest('a, button, input, select, textarea, label, [contenteditable], #audio-inspector, .audio-player-bar, .theme-toy')) return;
+    if (window.getSelection && String(window.getSelection())) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = (event.clientX - rect.left) * width / rect.width;
+    const y = (event.clientY - rect.top) * height / rect.height;
+    let band = null;
+    if (fade >= 0.01 && x >= 0 && x <= width && y >= 0 && y <= playerTopPx) {
+      for (let i = DRAW_ORDER.length - 1; i >= 0; i--) {
+        const b = DRAW_ORDER[i];
+        if (ctx.isPointInPath(curvePath(bandLevels[b], weights[b], BANDS[b].maxHeight).path, x, y)) {
+          band = BANDS[b].name === soloBand ? null : BANDS[b].name;
+          break;
+        }
+      }
+    }
+    if (window.AudioReactiveGradient) window.AudioReactiveGradient.setSolo(band);
+  }
+
   function init() {
     canvas = document.getElementById('waves');
     if (!canvas) return false;
     ctx = canvas.getContext('2d');
     resize();
+    document.addEventListener('click', handleClick);
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(resize, 150);
@@ -345,6 +383,7 @@
     isSettled: isSettled,
     getLevels: getLevels,
     setMode: setMode,
+    setSolo: function (band) { soloBand = band; },
     getMode: function () { return mode; },
     getBarCount: function () { return barCount; },
     isMobile: function () { return mobile; }
