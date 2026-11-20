@@ -26,7 +26,7 @@
   // Mobile browsers restrict stream analysis (and createMediaElementSource can mute cross-origin audio on iOS)
   const audioReactiveDisabled = !!(window.Device && window.Device.isMobile());
 
-  // Baseline alpha matching colorchange.js resting day-tint state
+  // Baseline alpha matching color-change.js resting day-tint state
   const BASELINE_ALPHA = 0.12;
 
   // Analyser node dynamic calibration constants
@@ -49,17 +49,6 @@
   const MAX_ALPHA = 0.20;
   // Tint color is the day color mixed toward white; weight is its effective day-color strength
   const TINT_WHITE_MIX = 0.8;
-
-  // Fallback day colors matching colorchange.js (Sunday = 0 .. Saturday = 6)
-  const FALLBACK_DAY_COLORS = [
-    '#b83b68', // Sunday
-    '#6b498f', // Monday
-    '#2a698a', // Tuesday
-    '#1b7a70', // Wednesday
-    '#437752', // Thursday
-    '#b26227', // Friday
-    '#ad454b'  // Saturday
-  ];
 
   // Module state
   let audio = null;
@@ -215,7 +204,8 @@
 
     if (!parsed) {
       const today = new Date().getDay();
-      hexStr = (window.dayColors && window.dayColors[today]) || FALLBACK_DAY_COLORS[today] || '#b83b68';
+      const theme = window.dayThemes && window.dayThemes[today];
+      hexStr = theme ? theme.accent : '#b83b68';
       parsed = parseColorToRgb(hexStr);
     }
 
