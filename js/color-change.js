@@ -1,31 +1,12 @@
-// activeColor: readable text/link tone.
-const dayColors = [
-  '#b83b68',  // sunday (0)
-  '#6b498f',  // monday (1)
-  '#2a698a',  // tuesday (2)
-  '#1b7a70',  // wednesday (3)
-  '#437752',  // thursday (4)
-  '#b26227',  // friday (5)
-  '#ad454b'   // saturday (6)
-];
-
-// Distinct start and end gradient stops creating 3 distinct, iridescent stops per day:
-// start (top-left) -> --day-tint (middle 12% alpha) -> end (bottom-right)
-const dayGradients = [
-  // Sunday
-  { start: '#d8f3fe', end: '#fff3d1' },
-  // Monday
-  { start: '#dcfceb', end: '#ffe0d6' },
-  // Tuesday
-  { start: '#ffe3ec', end: '#d5f7e6' },
-  // Wednesday
-  { start: '#efe3fc', end: '#fff1d0' },
-  // Thursday
-  { start: '#ffe7d8', end: '#daeafc' },
-  // Friday
-  { start: '#dcf8f7', end: '#fbe0f3' },
-  // Saturday
-  { start: '#fff6d5', end: '#d7f2f8' }
+// The single day-palette source for static and audio-reactive consumers.
+const dayThemes = [
+  { accent: '#b83b68', gradient: { start: '#d8f3fe', end: '#fff3d1' } }, // Sunday
+  { accent: '#6b498f', gradient: { start: '#dcfceb', end: '#ffe0d6' } }, // Monday
+  { accent: '#2a698a', gradient: { start: '#ffe3ec', end: '#d5f7e6' } }, // Tuesday
+  { accent: '#1b7a70', gradient: { start: '#efe3fc', end: '#fff1d0' } }, // Wednesday
+  { accent: '#437752', gradient: { start: '#ffe7d8', end: '#daeafc' } }, // Thursday
+  { accent: '#b26227', gradient: { start: '#dcf8f7', end: '#fbe0f3' } }, // Friday
+  { accent: '#ad454b', gradient: { start: '#fff6d5', end: '#d7f2f8' } }  // Saturday
 ];
 
 function hexToRgba(hex, alpha) {
@@ -38,8 +19,9 @@ function hexToRgba(hex, alpha) {
 
 function applyDayTheme(dayIndex) {
   const today = typeof dayIndex === 'number' ? dayIndex : new Date().getDay(); // 0-6
-  const activeColor = dayColors[today];
-  const gradient = dayGradients[today];
+  const theme = dayThemes[today];
+  const activeColor = theme.accent;
+  const gradient = theme.gradient;
 
   // Target all links inside the header (both the title and Projects/Contact)
   const headerLinks = document.querySelectorAll('header a');
@@ -58,6 +40,7 @@ function applyDayTheme(dayIndex) {
 
 if (typeof window !== 'undefined') {
   window.applyDayTheme = applyDayTheme;
+  window.dayThemes = dayThemes;
 }
 
 // Run on page load
@@ -83,7 +66,8 @@ function initThemeToy() {
   const items = dayLabels.map((label, i) => {
     const btn = document.createElement('button');
     const angle = (180 + 90 * i / 6) * Math.PI / 180;
-    const tint = hexToRgba(dayColors[i], 0.18);
+    const theme = dayThemes[i];
+    const tint = hexToRgba(theme.accent, 0.18);
     btn.type = 'button';
     btn.className = 'theme-day';
     btn.textContent = label;
@@ -92,7 +76,7 @@ function initThemeToy() {
     btn.style.setProperty('--x', `${Math.round(radius * Math.cos(angle))}px`);
     btn.style.setProperty('--y', `${Math.round(radius * Math.sin(angle))}px`);
     btn.style.background = `linear-gradient(${tint}, ${tint}), #fff`;
-    btn.style.color = dayColors[i];
+    btn.style.color = theme.accent;
     btn.addEventListener('click', () => select(i));
     toy.appendChild(btn);
     return btn;
