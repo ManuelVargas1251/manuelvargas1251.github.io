@@ -1,13 +1,39 @@
 // The single day-palette source for static and audio-reactive consumers.
 const dayThemes = [
-  { accent: '#b83b68', gradient: { start: '#d8f3fe', end: '#fff3d1' } }, // Sunday
-  { accent: '#6b498f', gradient: { start: '#dcfceb', end: '#ffe0d6' } }, // Monday
-  { accent: '#2a698a', gradient: { start: '#ffe3ec', end: '#d5f7e6' } }, // Tuesday
-  { accent: '#1b7a70', gradient: { start: '#efe3fc', end: '#fff1d0' } }, // Wednesday
-  { accent: '#437752', gradient: { start: '#ffe7d8', end: '#daeafc' } }, // Thursday
-  { accent: '#b26227', gradient: { start: '#dcf8f7', end: '#fbe0f3' } }, // Friday
-  { accent: '#ad454b', gradient: { start: '#fff6d5', end: '#d7f2f8' } }  // Saturday
+  {
+    light: { accent: '#b83b68', gradient: { start: '#d8f3fe', end: '#fff3d1' } },
+    dark: { accent: '#e8b0ad', gradient: { start: '#3b2930', end: '#68504a' } }
+  }, // Sunday
+  {
+    light: { accent: '#6b498f', gradient: { start: '#dcfceb', end: '#ffe0d6' } },
+    dark: { accent: '#e7c28b', gradient: { start: '#3e3327', end: '#26354e' } }
+  }, // Monday
+  {
+    light: { accent: '#2a698a', gradient: { start: '#ffe3ec', end: '#d5f7e6' } },
+    dark: { accent: '#d9e7a4', gradient: { start: '#34402c', end: '#45334c' } }
+  }, // Tuesday
+  {
+    light: { accent: '#1b7a70', gradient: { start: '#efe3fc', end: '#fff1d0' } },
+    dark: { accent: '#aee2dc', gradient: { start: '#1d4648', end: '#443759' } }
+  }, // Wednesday
+  {
+    light: { accent: '#437752', gradient: { start: '#ffe7d8', end: '#daeafc' } },
+    dark: { accent: '#b9cdec', gradient: { start: '#20395c', end: '#285047' } }
+  }, // Thursday
+  {
+    light: { accent: '#b26227', gradient: { start: '#dcf8f7', end: '#fbe0f3' } },
+    dark: { accent: '#d2c0e9', gradient: { start: '#3c3051', end: '#294c43' } }
+  }, // Friday
+  {
+    light: { accent: '#ad454b', gradient: { start: '#fff6d5', end: '#d7f2f8' } },
+    dark: { accent: '#efb9ce', gradient: { start: '#512c42', end: '#4e4527' } }
+  }  // Saturday
 ];
+
+function getDayTheme(dayIndex, appearance = 'light') {
+  const day = dayThemes[dayIndex];
+  return day && day[appearance] ? day[appearance] : dayThemes[0].light;
+}
 
 function hexToRgba(hex, alpha) {
   let cleanHex = hex.replace('#', '');
@@ -19,7 +45,7 @@ function hexToRgba(hex, alpha) {
 
 function applyDayTheme(dayIndex) {
   const today = typeof dayIndex === 'number' ? dayIndex : new Date().getDay(); // 0-6
-  const theme = dayThemes[today];
+  const theme = getDayTheme(today);
   const activeColor = theme.accent;
   const gradient = theme.gradient;
 
@@ -41,6 +67,7 @@ function applyDayTheme(dayIndex) {
 if (typeof window !== 'undefined') {
   window.applyDayTheme = applyDayTheme;
   window.dayThemes = dayThemes;
+  window.getDayTheme = getDayTheme;
 }
 
 // Run on page load
@@ -66,7 +93,7 @@ function initThemeToy() {
   const items = dayLabels.map((label, i) => {
     const btn = document.createElement('button');
     const angle = (180 + 90 * i / 6) * Math.PI / 180;
-    const theme = dayThemes[i];
+    const theme = getDayTheme(i);
     const tint = hexToRgba(theme.accent, 0.18);
     btn.type = 'button';
     btn.className = 'theme-day';

@@ -204,7 +204,7 @@
 
     if (!parsed) {
       const today = new Date().getDay();
-      const theme = window.dayThemes && window.dayThemes[today];
+      const theme = window.getDayTheme && window.getDayTheme(today);
       hexStr = theme ? theme.accent : '#b83b68';
       parsed = parseColorToRgb(hexStr);
     }
