@@ -166,6 +166,21 @@
 
 		<!-- Tab 2: Background Gradient -->
 		<div class="inspector-panel" id="inspector-tab-gradient" role="tabpanel" aria-labelledby="inspector-tab-btn-gradient" hidden>
+		<div class="theme-preview-control" aria-label="Theme appearance preview">
+			<div class="theme-preview-heading">
+				<span>Appearance Preview</span>
+				<span class="theme-preview-status" id="theme-preview-status">Light · Current page</span>
+			</div>
+			<div class="theme-preview-options" role="group" aria-label="Preview appearance">
+				<button type="button" class="theme-preview-btn is-active" data-theme-preview="light" aria-pressed="true">Light</button>
+				<button type="button" class="theme-preview-btn" data-theme-preview="dark" aria-pressed="false">Dark</button>
+				<button type="button" class="theme-preview-btn" data-theme-preview="automatic" aria-pressed="false">Automatic</button>
+			</div>
+			<label class="theme-preview-time">
+				<span>Simulated local time</span>
+				<input type="time" id="theme-preview-time" value="19:00">
+			</label>
+		</div>
 		<div class="inspector-grid">
 			<!-- Overall Loudness -->
 			<div class="inspector-card">

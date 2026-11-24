@@ -71,6 +71,10 @@ function applyDayTheme(dayIndex, appearance) {
   document.documentElement.style.setProperty('--day-color', activeColor);
   document.documentElement.dataset.themeAppearance = nextAppearance;
   document.documentElement.dataset.themeDay = String(today);
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.content = nextAppearance === 'dark' ? gradient.start : '#fff';
+  }
   window.dispatchEvent(new CustomEvent('daythemechange', {
     detail: { dayIndex: today, appearance: nextAppearance }
   }));
