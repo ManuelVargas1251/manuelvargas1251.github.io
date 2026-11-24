@@ -102,9 +102,7 @@ h1 a{
 }
 
 h1, .day-header {
-  /* Subtle white halo to separate text cleanly from the background gradient */
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.95), 
-               0 2px 6px rgba(255, 255, 255, 0.65);
+  text-shadow: none;
   transition: color 1.0s ease; /* Smooth color shift between days */
 }
 
@@ -1029,6 +1027,10 @@ footer small {
   right: 24px;
   width: 340px;
   max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 110px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -1313,6 +1315,79 @@ footer small {
   display: none;
 }
 
+.theme-preview-control {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.theme-preview-heading,
+.theme-preview-time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.theme-preview-heading {
+  margin-bottom: 7px;
+  color: #333;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.theme-preview-status {
+  color: #777;
+  font-size: 9.5px;
+  font-weight: 500;
+}
+
+.theme-preview-options {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.theme-preview-btn {
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 5px 7px;
+  background: rgba(255, 255, 255, 0.55);
+  color: #555;
+  font: 600 10.5px/1.2 inherit;
+  cursor: pointer;
+}
+
+.theme-preview-btn.is-active {
+  border-color: var(--day-color, #1b7a70);
+  background: #fff;
+  color: var(--day-color, #222);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.theme-preview-time {
+  color: #666;
+  font-size: 10px;
+}
+
+.theme-preview-time input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  padding: 3px 5px;
+}
+
+.theme-preview-btn:focus-visible,
+.theme-preview-time input:focus-visible {
+  outline: 2px solid var(--day-color, #444);
+  outline-offset: 2px;
+}
+
 .inspector-mode {
   display: flex;
   gap: 4px;
@@ -1342,6 +1417,126 @@ footer small {
 .inspector-mode-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+:root[data-theme-appearance="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme-appearance="dark"] body {
+  color: #d7e7e5;
+}
+
+[data-theme-appearance="dark"] h1,
+[data-theme-appearance="dark"] h2,
+[data-theme-appearance="dark"] h3,
+[data-theme-appearance="dark"] h4,
+[data-theme-appearance="dark"] h5,
+[data-theme-appearance="dark"] h6,
+[data-theme-appearance="dark"] .main-title {
+  color: #edf6f4;
+}
+
+[data-theme-appearance="dark"] .main-bio,
+[data-theme-appearance="dark"] footer small,
+[data-theme-appearance="dark"] .audio-label,
+[data-theme-appearance="dark"] .inspector-source-badge,
+[data-theme-appearance="dark"] .inspector-status,
+[data-theme-appearance="dark"] .metric-pct {
+  color: #b7c9c6;
+}
+
+[data-theme-appearance="dark"] .audio-title,
+[data-theme-appearance="dark"] .inspector-title,
+[data-theme-appearance="dark"] .metric-value {
+  color: #edf6f4;
+}
+
+[data-theme-appearance="dark"] .audio-toggle-btn,
+[data-theme-appearance="dark"] .audio-action-btn,
+[data-theme-appearance="dark"] .theme-preview-btn,
+[data-theme-appearance="dark"] .inspector-close-btn {
+  background-color: rgba(238, 249, 247, 0.06);
+  color: #d2e2df;
+}
+
+[data-theme-appearance="dark"] .audio-toggle-btn.active,
+[data-theme-appearance="dark"] .audio-toggle-btn.is-active,
+[data-theme-appearance="dark"] .audio-action-btn:hover,
+[data-theme-appearance="dark"] .audio-action-btn.is-active {
+  background-color: rgba(238, 249, 247, 0.14);
+  color: #ffffff;
+}
+
+[data-theme-appearance="dark"] .audio-toggle-btn:hover,
+[data-theme-appearance="dark"] .theme-preview-btn:hover,
+[data-theme-appearance="dark"] .inspector-close-btn:hover {
+  background-color: rgba(238, 249, 247, 0.1);
+  color: #ffffff;
+}
+
+[data-theme-appearance="dark"] .audio-source-toggles,
+[data-theme-appearance="dark"] .audio-action-btn,
+[data-theme-appearance="dark"] .theme-preview-control,
+[data-theme-appearance="dark"] .inspector-status,
+[data-theme-appearance="dark"] .inspector-close-btn {
+  background-color: rgba(238, 249, 247, 0.06);
+  border-color: rgba(238, 249, 247, 0.12);
+}
+
+[data-theme-appearance="dark"] .site-nav a,
+[data-theme-appearance="dark"] .theme-toy-btn,
+[data-theme-appearance="dark"] .main-card,
+[data-theme-appearance="dark"] .audio-player-bar,
+[data-theme-appearance="dark"] .audio-inspector-panel {
+  background-color: rgba(14, 31, 36, 0.84);
+  border-color: rgba(225, 246, 242, 0.15);
+  color: #dcebea;
+}
+
+[data-theme-appearance="dark"] .audio-player-bar,
+[data-theme-appearance="dark"] .audio-inspector-panel {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
+}
+
+[data-theme-appearance="dark"] .inspector-card,
+[data-theme-appearance="dark"] .inspector-tab.is-active,
+[data-theme-appearance="dark"] .inspector-mode-btn.is-active,
+[data-theme-appearance="dark"] .theme-preview-btn.is-active {
+  background-color: rgba(238, 249, 247, 0.11);
+  color: #edf8f6;
+}
+
+[data-theme-appearance="dark"] .theme-preview-time input {
+  background: rgba(238, 249, 247, 0.12);
+  border-color: rgba(238, 249, 247, 0.18);
+  color: #edf6f4;
+}
+
+[data-theme-appearance="dark"] .metric-label,
+[data-theme-appearance="dark"] .metric-value,
+[data-theme-appearance="dark"] .theme-preview-heading {
+  color: #e1eeec;
+}
+
+[data-theme-appearance="dark"] .metric-sub,
+[data-theme-appearance="dark"] .theme-preview-status,
+[data-theme-appearance="dark"] .theme-preview-time,
+[data-theme-appearance="dark"] .inspector-tab,
+[data-theme-appearance="dark"] .inspector-mode-btn {
+  color: #adc0bd;
+}
+
+[data-theme-appearance="dark"] .inspector-status.is-active {
+  color: #74d9a4;
+}
+
+[data-theme-appearance="dark"] .inspector-status.is-buffering {
+  color: #ffc27a;
+}
+
+[data-theme-appearance="dark"] .metric-bar-bg {
+  background: rgba(238, 249, 247, 0.1);
 }
 
 /* Gradient angle dial: needle points along the CSS gradient direction (0deg = up, clockwise) */
@@ -1411,6 +1606,7 @@ footer small {
     left: 12px;
     width: auto;
     bottom: 118px;
+    max-height: calc(100dvh - 142px);
     padding: 10px 12px;
   }
 }

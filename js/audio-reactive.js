@@ -121,7 +121,10 @@
     angleNeedle: null,
     gradientPos: null,
     bgScale: null,
-    audioContext: null
+    audioContext: null,
+    themePreviewBtns: [],
+    themePreviewTime: null,
+    themePreviewStatus: null
   };
 
   // Inspector tab state; the body only updates for the open panel's active tab
@@ -129,6 +132,38 @@
   let lastInspectorArgs = null;
   const STORAGE_TAB = 'inspector-tab';
   const STORAGE_MODE = 'inspector-wave-mode';
+  let themePreviewMode = 'light';
+
+  function resolvePreviewAppearance(mode, timeValue) {
+    if (mode !== 'automatic') return mode;
+    const parts = String(timeValue || '19:00').split(':').map(Number);
+    const hour = parts.length ? parts[0] : 19;
+    return hour >= 7 && hour < 19 ? 'light' : 'dark';
+  }
+
+  function setThemePreview(mode) {
+    if (!['light', 'dark', 'automatic'].includes(mode)) return;
+    themePreviewMode = mode;
+    const timeValue = ui.themePreviewTime ? ui.themePreviewTime.value : '19:00';
+    const appearance = resolvePreviewAppearance(mode, timeValue);
+    const current = window.getCurrentDayTheme ? window.getCurrentDayTheme() : { dayIndex: new Date().getDay() };
+
+    if (window.applyDayTheme) window.applyDayTheme(current.dayIndex, appearance);
+
+    ui.themePreviewBtns.forEach(function (btn) {
+      const active = btn.dataset.themePreview === mode;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+
+    if (ui.themePreviewStatus) {
+      const modeLabel = mode.charAt(0).toUpperCase() + mode.slice(1);
+      const resolvedLabel = appearance.charAt(0).toUpperCase() + appearance.slice(1);
+      ui.themePreviewStatus.textContent = mode === 'automatic'
+        ? `Automatic · ${resolvedLabel} at ${timeValue}`
+        : `${modeLabel} · ${resolvedLabel === 'Light' ? 'Current page' : 'Preview'}`;
+    }
+  }
 
   /**
    * Linear interpolation helper
@@ -184,8 +219,10 @@
    * Light day-color tint: pulsing strength never darkens the page the way a raw dark day color would.
    */
   function pastelTint(rgb, weight) {
-    const mix = (c) => Math.round(c * (1 - TINT_WHITE_MIX) + 255 * TINT_WHITE_MIX);
-    const a = Math.min(1, weight / (1 - TINT_WHITE_MIX));
+    const isDark = document.documentElement.dataset.themeAppearance === 'dark';
+    const whiteMix = isDark ? 0.35 : TINT_WHITE_MIX;
+    const mix = (c) => Math.round(c * (1 - whiteMix) + 255 * whiteMix);
+    const a = Math.min(1, isDark ? weight * 0.7 : weight / (1 - TINT_WHITE_MIX));
     return `rgba(${mix(rgb.r)}, ${mix(rgb.g)}, ${mix(rgb.b)}, ${a.toFixed(3)})`;
   }
 
@@ -811,6 +848,9 @@
     ui.gradientPos = document.getElementById('val-gradient-pos');
     ui.bgScale = document.getElementById('val-bg-scale');
     ui.audioContext = document.getElementById('val-audio-context');
+    ui.themePreviewBtns = Array.prototype.slice.call(document.querySelectorAll('[data-theme-preview]'));
+    ui.themePreviewTime = document.getElementById('theme-preview-time');
+    ui.themePreviewStatus = document.getElementById('theme-preview-status');
   }
 
   /**
@@ -942,6 +982,24 @@
         setSolo(soloBand === btn.dataset.soloBand ? null : btn.dataset.soloBand);
       });
     });
+    ui.themePreviewBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setThemePreview(btn.dataset.themePreview);
+      });
+    });
+    if (ui.themePreviewTime) {
+      ui.themePreviewTime.addEventListener('input', function () {
+        if (themePreviewMode === 'automatic') setThemePreview('automatic');
+      });
+    }
+    window.addEventListener('daythemechange', function () {
+      const dayInfo = getActiveDayInfo();
+      document.documentElement.style.setProperty(
+        '--day-tint',
+        pastelTint(dayInfo.rgb, currentAlpha)
+      );
+      if (window.getCurrentDayTheme && lastInspectorArgs) refreshInspector();
+    });
   }
 
   /**
@@ -962,6 +1020,8 @@
     setupEventListeners();
     setActiveTab(readStored(STORAGE_TAB), false);
     setWaveMode(readStored(STORAGE_MODE) === 'single' ? 'single' : 'bands');
+    // setThemePreview('dark');
+    setThemePreview('light');
     resetCssModulations();
 
     return true;
