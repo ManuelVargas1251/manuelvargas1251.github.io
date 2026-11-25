@@ -35,6 +35,9 @@ function getDayTheme(dayIndex, appearance = 'light') {
   return day && day[appearance] ? day[appearance] : dayThemes[0].light;
 }
 
+let currentDayIndex = new Date().getDay();
+let currentAppearance = 'light';
+
 function hexToRgba(hex, alpha) {
   let cleanHex = hex.replace('#', '');
   let r = parseInt(cleanHex.substring(0, 2), 16);
@@ -43,11 +46,15 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function applyDayTheme(dayIndex) {
+function applyDayTheme(dayIndex, appearance) {
   const today = typeof dayIndex === 'number' ? dayIndex : new Date().getDay(); // 0-6
-  const theme = getDayTheme(today);
+  const nextAppearance = appearance === 'dark' ? 'dark' : appearance === 'light' ? 'light' : currentAppearance;
+  const theme = getDayTheme(today, nextAppearance);
   const activeColor = theme.accent;
   const gradient = theme.gradient;
+
+  currentDayIndex = today;
+  currentAppearance = nextAppearance;
 
   // Target all links inside the header (both the title and Projects/Contact)
   const headerLinks = document.querySelectorAll('header a');
@@ -62,12 +69,24 @@ function applyDayTheme(dayIndex) {
   document.documentElement.style.setProperty('--day-tint', softTint);
   document.documentElement.style.setProperty('--gradient-end', gradient.end);
   document.documentElement.style.setProperty('--day-color', activeColor);
+  document.documentElement.dataset.themeAppearance = nextAppearance;
+  document.documentElement.dataset.themeDay = String(today);
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.content = nextAppearance === 'dark' ? gradient.start : '#fff';
+  }
+  window.dispatchEvent(new CustomEvent('daythemechange', {
+    detail: { dayIndex: today, appearance: nextAppearance }
+  }));
 }
 
 if (typeof window !== 'undefined') {
   window.applyDayTheme = applyDayTheme;
   window.dayThemes = dayThemes;
   window.getDayTheme = getDayTheme;
+  window.getCurrentDayTheme = function () {
+    return { dayIndex: currentDayIndex, appearance: currentAppearance };
+  };
 }
 
 // Run on page load
