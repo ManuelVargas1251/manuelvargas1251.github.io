@@ -2,31 +2,31 @@
 const dayThemes = [
   {
     light: { accent: '#b83b68', gradient: { start: '#d8f3fe', end: '#fff3d1' } },
-    dark: { accent: '#e8b0ad', gradient: { start: '#3b2930', end: '#68504a' } }
+    dark: { accent: '#efb3c3', gradient: { start: '#46253b', end: '#174943' } }
   }, // Sunday
   {
     light: { accent: '#6b498f', gradient: { start: '#dcfceb', end: '#ffe0d6' } },
-    dark: { accent: '#e7c28b', gradient: { start: '#3e3327', end: '#26354e' } }
+    dark: { accent: '#d8b3e6', gradient: { start: '#382a3f', end: '#162d48' } }
   }, // Monday
   {
     light: { accent: '#2a698a', gradient: { start: '#ffe3ec', end: '#d5f7e6' } },
-    dark: { accent: '#d9e7a4', gradient: { start: '#34402c', end: '#45334c' } }
+    dark: { accent: '#d9e7a4', gradient: { start: '#314529', end: '#34264d' } }
   }, // Tuesday
   {
     light: { accent: '#1b7a70', gradient: { start: '#efe3fc', end: '#fff1d0' } },
-    dark: { accent: '#aee2dc', gradient: { start: '#1d4648', end: '#443759' } }
+    dark: { accent: '#aee2dc', gradient: { start: '#174c4c', end: '#493153' } }
   }, // Wednesday
   {
     light: { accent: '#437752', gradient: { start: '#ffe7d8', end: '#daeafc' } },
-    dark: { accent: '#b9cdec', gradient: { start: '#20395c', end: '#285047' } }
+    dark: { accent: '#c7d5ef', gradient: { start: '#1d355f', end: '#4a2942' } }
   }, // Thursday
   {
     light: { accent: '#b26227', gradient: { start: '#dcf8f7', end: '#fbe0f3' } },
-    dark: { accent: '#d2c0e9', gradient: { start: '#3c3051', end: '#294c43' } }
+    dark: { accent: '#dec5ff', gradient: { start: '#382c5b', end: '#234b41' } }
   }, // Friday
   {
     light: { accent: '#ad454b', gradient: { start: '#fff6d5', end: '#d7f2f8' } },
-    dark: { accent: '#efb9ce', gradient: { start: '#512c42', end: '#4e4527' } }
+    dark: { accent: '#efbdd0', gradient: { start: '#522a46', end: '#273c55' } }
   }  // Saturday
 ];
 

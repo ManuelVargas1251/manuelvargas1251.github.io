@@ -79,10 +79,24 @@
   const mobileQuery = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
 
   function pastel(rgb, mixAmount) {
+    const dark = document.documentElement.dataset.themeAppearance === 'dark';
+    if (dark) {
+      return {
+        r: Math.round(rgb.r * 0.5 + 10 * 0.5),
+        g: Math.round(rgb.g * 0.5 + 18 * 0.5),
+        b: Math.round(rgb.b * 0.5 + 25 * 0.5)
+      };
+    }
     function mix(c) {
       return Math.min(255, Math.max(MIN_CHANNEL, Math.round(c * (1 - mixAmount) + 255 * mixAmount)));
     }
     return { r: mix(rgb.r), g: mix(rgb.g), b: mix(rgb.b) };
+  }
+
+  function parseRgb(color) {
+    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!match) return { r: 10, g: 18, b: 25 };
+    return { r: Number(match[1]), g: Number(match[2]), b: Number(match[3]) };
   }
 
   function smoothstep(a, b, x) {
@@ -258,13 +272,25 @@
 
   function drawCurve(arr, weight, maxHeight, whiteMix, alphaScale, rgb) {
     const crest = pastel(rgb, whiteMix);
+    const dark = document.documentElement.dataset.themeAppearance === 'dark';
+    const darkBody = dark ? parseRgb(getComputedStyle(document.documentElement)
+      .getPropertyValue('--gradient-end')
+      .trim()) : null;
     const baseline = playerTopPx;
     const curve = curvePath(arr, weight, maxHeight);
     const a = MAX_ALPHA * alphaScale;
     const gradient = ctx.createLinearGradient(0, curve.top, 0, baseline);
-    gradient.addColorStop(0, `rgba(${crest.r}, ${crest.g}, ${crest.b}, ${a.toFixed(3)})`);
-    gradient.addColorStop(0.5, `rgba(255, 255, 255, ${(a * 0.5).toFixed(3)})`);
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    gradient.addColorStop(
+      0,
+      dark ? `rgba(7, 12, 18, ${(a * 0.82).toFixed(3)})`
+           : `rgba(${crest.r}, ${crest.g}, ${crest.b}, ${a.toFixed(3)})`
+    );
+    gradient.addColorStop(
+      0.5,
+      dark ? `rgba(${Math.round(darkBody.r * 0.48 + 9 * 0.52)}, ${Math.round(darkBody.g * 0.48 + 18 * 0.52)}, ${Math.round(darkBody.b * 0.48 + 26 * 0.52)}, ${(a * 0.68).toFixed(3)})`
+           : `rgba(255, 255, 255, ${(a * 0.5).toFixed(3)})`
+    );
+    gradient.addColorStop(1, dark ? 'rgba(10, 18, 25, 0)' : 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = gradient;
     ctx.fill(curve.path);
   }

@@ -1494,6 +1494,41 @@ footer small {
   color: #dcebea;
 }
 
+@media screen and (max-width: 768px) {
+  [data-theme-appearance="dark"] .nav-toggle {
+    background-color: rgba(14, 31, 36, 0.82);
+    border-color: rgba(225, 246, 242, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+  }
+
+  [data-theme-appearance="dark"] .nav-toggle:hover {
+    background-color: rgba(22, 45, 50, 0.94);
+    border-color: var(--day-color, rgba(225, 246, 242, 0.28));
+  }
+
+  [data-theme-appearance="dark"] .hamburger-line {
+    background-color: #edf6f4;
+  }
+
+  [data-theme-appearance="dark"] .site-nav {
+    background-color: rgba(14, 31, 36, 0.92);
+    border-color: rgba(225, 246, 242, 0.15);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+  }
+
+  [data-theme-appearance="dark"] .site-nav a {
+    background-color: transparent;
+    color: #dcebea;
+  }
+
+  [data-theme-appearance="dark"] .site-nav a:hover,
+  [data-theme-appearance="dark"] .site-nav a:focus,
+  [data-theme-appearance="dark"] .site-nav a:active {
+    background-color: rgba(238, 249, 247, 0.1);
+    color: #ffffff;
+  }
+}
+
 [data-theme-appearance="dark"] .audio-player-bar,
 [data-theme-appearance="dark"] .audio-inspector-panel {
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.32);
