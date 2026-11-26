@@ -219,11 +219,17 @@
    * Light day-color tint: pulsing strength never darkens the page the way a raw dark day color would.
    */
   function pastelTint(rgb, weight) {
-    const isDark = document.documentElement.dataset.themeAppearance === 'dark';
-    const whiteMix = isDark ? 0.35 : TINT_WHITE_MIX;
-    const mix = (c) => Math.round(c * (1 - whiteMix) + 255 * whiteMix);
-    const a = Math.min(1, isDark ? weight * 0.7 : weight / (1 - TINT_WHITE_MIX));
-    return `rgba(${mix(rgb.r)}, ${mix(rgb.g)}, ${mix(rgb.b)}, ${a.toFixed(3)})`;
+    const current = window.getCurrentDayTheme ? window.getCurrentDayTheme().resolved : null;
+    const tint = current && current.effects ? current.effects.tint : {
+      mixTarget: { r: 255, g: 255, b: 255 },
+      mixAmount: TINT_WHITE_MIX,
+      alphaDivisor: 1 - TINT_WHITE_MIX
+    };
+    const mix = (c, target) => Math.round(c * (1 - tint.mixAmount) + target * tint.mixAmount);
+    const a = Math.min(1, tint.alphaScale !== undefined
+      ? weight * tint.alphaScale
+      : weight / tint.alphaDivisor);
+    return `rgba(${mix(rgb.r, tint.mixTarget.r)}, ${mix(rgb.g, tint.mixTarget.g)}, ${mix(rgb.b, tint.mixTarget.b)}, ${a.toFixed(3)})`;
   }
 
   /**
