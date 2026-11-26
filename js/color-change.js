@@ -30,13 +30,58 @@ const dayThemes = [
   }  // Saturday
 ];
 
+const appearanceEffects = {
+  light: {
+    browserColor: '#fff',
+    tint: {
+      mixTarget: { r: 255, g: 255, b: 255 },
+      mixAmount: 0.8,
+      alphaDivisor: 0.2
+    },
+    waves: {
+      crest: { source: 'accent' },
+      middle: { source: 'mix', color: [255, 255, 255], alphaScale: 0.5 },
+      base: [255, 255, 255, 0]
+    }
+  },
+  dark: {
+    browserColor: 'gradient-start',
+    tint: {
+      mixTarget: { r: 255, g: 255, b: 255 },
+      mixAmount: 0.35,
+      alphaScale: 0.7
+    },
+    waves: {
+      crest: { source: 'mix', color: [7, 12, 18], alphaScale: 0.82 },
+      middle: {
+        source: 'gradient-end',
+        mixTarget: [9, 18, 26],
+        mixAmount: 0.48,
+        alphaScale: 0.68
+      },
+      base: [10, 18, 25, 0]
+    }
+  }
+};
+
 function getDayTheme(dayIndex, appearance = 'light') {
   const day = dayThemes[dayIndex];
   return day && day[appearance] ? day[appearance] : dayThemes[0].light;
 }
 
+function getResolvedDayTheme(dayIndex, appearance = 'light') {
+  const appearanceKey = appearanceEffects[appearance] ? appearance : 'light';
+  const theme = getDayTheme(dayIndex, appearanceKey);
+  return { dayIndex, appearance: appearanceKey, ...theme, effects: appearanceEffects[appearanceKey] };
+}
+
+function resolveAppearance(appearance) {
+  return appearanceEffects[appearance] ? appearance : currentAppearance;
+}
+
 let currentDayIndex = new Date().getDay();
 let currentAppearance = 'light';
+let currentResolvedTheme = getResolvedDayTheme(currentDayIndex, currentAppearance);
 
 function hexToRgba(hex, alpha) {
   let cleanHex = hex.replace('#', '');
@@ -48,13 +93,15 @@ function hexToRgba(hex, alpha) {
 
 function applyDayTheme(dayIndex, appearance) {
   const today = typeof dayIndex === 'number' ? dayIndex : new Date().getDay(); // 0-6
-  const nextAppearance = appearance === 'dark' ? 'dark' : appearance === 'light' ? 'light' : currentAppearance;
+  const nextAppearance = resolveAppearance(appearance);
+  const resolvedTheme = getResolvedDayTheme(today, nextAppearance);
   const theme = getDayTheme(today, nextAppearance);
   const activeColor = theme.accent;
   const gradient = theme.gradient;
 
   currentDayIndex = today;
   currentAppearance = nextAppearance;
+  currentResolvedTheme = resolvedTheme;
 
   // Target all links inside the header (both the title and Projects/Contact)
   const headerLinks = document.querySelectorAll('header a');
@@ -73,7 +120,9 @@ function applyDayTheme(dayIndex, appearance) {
   document.documentElement.dataset.themeDay = String(today);
   const themeColor = document.querySelector('meta[name="theme-color"]');
   if (themeColor) {
-    themeColor.content = nextAppearance === 'dark' ? gradient.start : '#fff';
+    themeColor.content = resolvedTheme.effects.browserColor === 'gradient-start'
+      ? gradient.start
+      : resolvedTheme.effects.browserColor;
   }
   window.dispatchEvent(new CustomEvent('daythemechange', {
     detail: { dayIndex: today, appearance: nextAppearance }
@@ -84,8 +133,9 @@ if (typeof window !== 'undefined') {
   window.applyDayTheme = applyDayTheme;
   window.dayThemes = dayThemes;
   window.getDayTheme = getDayTheme;
+  window.getResolvedDayTheme = getResolvedDayTheme;
   window.getCurrentDayTheme = function () {
-    return { dayIndex: currentDayIndex, appearance: currentAppearance };
+    return { dayIndex: currentDayIndex, appearance: currentAppearance, resolved: currentResolvedTheme };
   };
 }
 

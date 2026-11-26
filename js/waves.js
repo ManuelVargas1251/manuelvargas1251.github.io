@@ -79,14 +79,6 @@
   const mobileQuery = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
 
   function pastel(rgb, mixAmount) {
-    const dark = document.documentElement.dataset.themeAppearance === 'dark';
-    if (dark) {
-      return {
-        r: Math.round(rgb.r * 0.5 + 10 * 0.5),
-        g: Math.round(rgb.g * 0.5 + 18 * 0.5),
-        b: Math.round(rgb.b * 0.5 + 25 * 0.5)
-      };
-    }
     function mix(c) {
       return Math.min(255, Math.max(MIN_CHANNEL, Math.round(c * (1 - mixAmount) + 255 * mixAmount)));
     }
@@ -94,6 +86,15 @@
   }
 
   function parseRgb(color) {
+    const hex = color.match(/^#([0-9a-f]{6})$/i);
+    if (hex) {
+      const value = parseInt(hex[1], 16);
+      return {
+        r: (value >> 16) & 255,
+        g: (value >> 8) & 255,
+        b: value & 255
+      };
+    }
     const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
     if (!match) return { r: 10, g: 18, b: 25 };
     return { r: Number(match[1]), g: Number(match[2]), b: Number(match[3]) };
@@ -272,25 +273,30 @@
 
   function drawCurve(arr, weight, maxHeight, whiteMix, alphaScale, rgb) {
     const crest = pastel(rgb, whiteMix);
-    const dark = document.documentElement.dataset.themeAppearance === 'dark';
-    const darkBody = dark ? parseRgb(getComputedStyle(document.documentElement)
-      .getPropertyValue('--gradient-end')
-      .trim()) : null;
+    const current = window.getCurrentDayTheme ? window.getCurrentDayTheme().resolved : null;
+    const waveEffects = current && current.effects ? current.effects.waves : {
+      crest: { source: 'accent' },
+      middle: { source: 'mix', color: [255, 255, 255], alphaScale: 0.5 },
+      base: [255, 255, 255, 0]
+    };
+    const gradientEnd = parseRgb(current ? current.gradient.end : '#0a1219');
     const baseline = playerTopPx;
     const curve = curvePath(arr, weight, maxHeight);
     const a = MAX_ALPHA * alphaScale;
     const gradient = ctx.createLinearGradient(0, curve.top, 0, baseline);
-    gradient.addColorStop(
-      0,
-      dark ? `rgba(7, 12, 18, ${(a * 0.82).toFixed(3)})`
-           : `rgba(${crest.r}, ${crest.g}, ${crest.b}, ${a.toFixed(3)})`
-    );
-    gradient.addColorStop(
-      0.5,
-      dark ? `rgba(${Math.round(darkBody.r * 0.48 + 9 * 0.52)}, ${Math.round(darkBody.g * 0.48 + 18 * 0.52)}, ${Math.round(darkBody.b * 0.48 + 26 * 0.52)}, ${(a * 0.68).toFixed(3)})`
-           : `rgba(255, 255, 255, ${(a * 0.5).toFixed(3)})`
-    );
-    gradient.addColorStop(1, dark ? 'rgba(10, 18, 25, 0)' : 'rgba(255, 255, 255, 0)');
+    if (waveEffects.crest.source === 'accent') {
+      gradient.addColorStop(0, `rgba(${crest.r}, ${crest.g}, ${crest.b}, ${a.toFixed(3)})`);
+    } else {
+      gradient.addColorStop(0, `rgba(${waveEffects.crest.color[0]}, ${waveEffects.crest.color[1]}, ${waveEffects.crest.color[2]}, ${(a * waveEffects.crest.alphaScale).toFixed(3)})`);
+    }
+    if (waveEffects.middle.source === 'gradient-end') {
+      const mix = waveEffects.middle.mixAmount;
+      const target = waveEffects.middle.mixTarget;
+      gradient.addColorStop(0.5, `rgba(${Math.round(gradientEnd.r * mix + target[0] * (1 - mix))}, ${Math.round(gradientEnd.g * mix + target[1] * (1 - mix))}, ${Math.round(gradientEnd.b * mix + target[2] * (1 - mix))}, ${(a * waveEffects.middle.alphaScale).toFixed(3)})`);
+    } else {
+      gradient.addColorStop(0.5, `rgba(${waveEffects.middle.color.join(', ')}, ${(a * waveEffects.middle.alphaScale).toFixed(3)})`);
+    }
+    gradient.addColorStop(1, `rgba(${waveEffects.base.join(', ')})`);
     ctx.fillStyle = gradient;
     ctx.fill(curve.path);
   }
